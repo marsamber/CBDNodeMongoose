@@ -1,6 +1,7 @@
 const express = require('express');
 const Post = require('../models/Post');
 const router = express.Router();
+const authenticate = require('../authenticate');
 
 router.get('/posts', async (req, res) => {
   const posts = await Post.find();
@@ -17,7 +18,7 @@ router.get('/posts/:id', async (req, res) => {
   }
 });
 
-router.post('/posts', async (req, res) => {
+router.route('/posts').post(authenticate.verifyUser, async (req, res) => {
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
@@ -26,7 +27,7 @@ router.post('/posts', async (req, res) => {
   res.send(post);
 });
 
-router.patch('/posts/:id', async (req, res) => {
+router.route('/posts/:id').patch(authenticate.verifyUser, async (req, res) => {
   try {
     const post = await Post.findOne({ _id: req.params.id });
 
@@ -46,7 +47,7 @@ router.patch('/posts/:id', async (req, res) => {
   }
 });
 
-router.delete('/posts/:id', async (req, res) => {
+router.route('/posts/:id').delete(authenticate.verifyUser, async (req, res) => {
   try {
     await Post.deleteOne({ _id: req.params.id });
     res.status(204).send();
