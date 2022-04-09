@@ -20,6 +20,7 @@
   "homepage": "https://github.com/marsamber/CBDNodeMongoose#readme",
   "dependencies": {
     "express": "^4.17.3",
-    "mongoose": "^6.2.7"
+    "mongoose": "^6.2.7",
+    "passport-local-mongoose": "^7.0.0"
   }
 }
