@@ -8,6 +8,7 @@ const routes = require("./routes/routes");
 const config = require('./config');
 
 const usersRouter = require('./routes/users');
+const recipesRouter = require('./routes/recipes')
 
 mongoose
   .connect(config.mongoUrl, { useNewUrlParser: true })
@@ -17,7 +18,8 @@ mongoose
     app.use(express.json());
     app.use(passport.initialize());
     app.use('/users', usersRouter);
-    app.use("/api", routes)
+    app.use("/api", routes);
+    app.use("/api", recipesRouter);
 
     app.listen(5000, () => {
       console.log('Server has started!');
