@@ -7,8 +7,8 @@ const toBuySchema = new Schema({
         ref: 'User'
 	},
 	ingredient: {
-		type: mongoose.Schema.Types.ObjectId,
-        ref: 'Ingredient'
+		type: String,
+		required: true
 	},
 	priority: {
 		type: String,
