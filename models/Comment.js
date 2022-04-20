@@ -1,22 +1,24 @@
 const mongoose = require('mongoose')
 const Schema =  mongoose.Schema;
 
-const toCookSchema = new Schema({
+const commentSchema = new Schema({
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
 	},
 	recipe: {
 		type: mongoose.Schema.Types.ObjectId,
+        ref: 'recipe'
+	},
+	text: {
+		type: String,
         ref: 'Recipe'
 	},
-	priority: {
-		type: String,
-        enum: ['HIGH', 'MEDIUM', 'LOW'],
-		default: 'LOW'
+	date: {
+		type: Date,
 	}
 }, {
     timestamps: true
 });
 
-module.exports = mongoose.model("ToCook", toCookSchema);
+module.exports = mongoose.model("Comment", commentSchema);
