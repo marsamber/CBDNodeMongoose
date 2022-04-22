@@ -10,10 +10,6 @@ const commentSchema = new Schema({
 		type: mongoose.Schema.Types.ObjectId,
         ref: 'recipe'
 	},
-	text: {
-		type: String,
-        ref: 'Recipe'
-	},
 	date: {
 		type: Date,
 	}
