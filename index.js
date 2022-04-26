@@ -9,6 +9,7 @@ const config = require('./config');
 const usersRouter = require('./routes/users');
 const recipesRouter = require('./routes/recipes')
 const cookedRouter = require('./routes/cooked');
+const favouriteRouter = require('./routes/favourite');
 
 mongoose
   .connect(config.mongoUrl, { useNewUrlParser: true })
@@ -20,6 +21,7 @@ mongoose
     app.use('/users', usersRouter);
     app.use("/api/recipes", recipesRouter);
     app.use("/api/cooked", cookedRouter);
+    app.use("/api/favourite", favouriteRouter);
 
     app.listen(5000, () => {
       console.log('Server has started!');
