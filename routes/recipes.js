@@ -8,7 +8,7 @@ const authenticate = require('../authenticate');
 const router = express.Router();
 router.use(bodyParser.json());
 
-router.post('/recipes/import', async (req, res) => {
+router.post('/import', async (req, res) => {
     let inputStream = Fs.createReadStream('./src/dataset.csv', 'utf8');
 
     inputStream
@@ -34,7 +34,7 @@ router.post('/recipes/import', async (req, res) => {
         });
 });
 
-router.route('/recipes').get(async (req, res) => {
+router.route('/').get(async (req, res) => {
     const recipes = await Recipe.find();
     res.send(recipes);
 }).delete(authenticate.verifyUser, async (req, res) => {
@@ -52,7 +52,7 @@ router.route('/recipes').get(async (req, res) => {
     res.send(recipe);
 });
 
-router.route('/recipes/:id').get(async (req, res) => {
+router.route('/:id').get(async (req, res) => {
     try {
         const recipe = await Recipe.findOne({ _id: req.params.id });
         res.send(recipe);
