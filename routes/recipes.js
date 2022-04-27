@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const Recipe = require("../models/Recipe");
+const Comment = require("../models/Comment");
 const Fs = require("fs");
 const { parse } = require("csv-parse");
 const authenticate = require("../authenticate");
@@ -38,7 +39,12 @@ router.post("/recipes/import", async (req, res) => {
 router
   .route("/recipes")
   .get(async (req, res) => {
-    const recipes = await Recipe.find();
+    const recipes = await Recipe.find().populate({
+      path: 'comments',
+      populate: {
+        path: 'user',
+      }
+   });
     res.send(recipes);
   })
   .delete(authenticate.verifyUser, async (req, res) => {
@@ -103,212 +109,97 @@ router
       res.status(404);
       res.send({ error: "Recipe doesn't exist!" });
     }
-
-    router
-      .route("/recipes/:reciceId/comments")
-      .get((req, res, next) => {
-        Recipe.findById(req.params.dishId)
-          .populate("comments.author")
-          .then(
-            (recipe) => {
-              if (recipe != null) {
-                res.statusCode = 200;
-                res.setHeader("Content-Type", "application/json");
-                res.json(recipe.comments);
-              } else {
-                err = new Error("Recipe " + req.params.recipeId + " not found");
-                err.status = 404;
-                return next(err);
-              }
-            },
-            (err) => next(err)
-          )
-          .catch((err) => next(err));
-      })
-      .post(authenticate.verifyUser, (req, res, next) => {
-        Recipe.findById(req.params.recipeId)
-          .then(
-            (recipe) => {
-              if (recipe != null) {
-                req.body.author = req.user._id;
-                recipe.comments.push(req.body);
-                recipe.save().then(
-                  (recipe) => {
-                    Recipe.findById(recipe._id)
-                      .populate("comments.author")
-                      .then((recipe) => {
-                        res.statusCode = 200;
-                        res.setHeader("Content-Type", "application/json");
-                        res.json(recipe);
-                      });
-                  },
-                  (err) => next(err)
-                );
-              } else {
-                err = new Error("Recipe " + req.params.recipeId + " not found");
-                err.status = 404;
-                return next(err);
-              }
-            },
-            (err) => next(err)
-          )
-          .catch((err) => next(err));
-      })
-      .put(authenticate.verifyUser, (req, res, next) => {
-        res.statusCode = 403;
-        res.end(
-          "PUT operation not supported on /recipes/" +
-            req.params.recipeId +
-            "/comments"
-        );
-      })
-      .delete(authenticate.verifyUser, (req, res, next) => {
-        Dishes.findById(req.params.dishId)
-          .then(
-            (dish) => {
-              if (dish != null) {
-                for (var i = dish.comments.length - 1; i >= 0; i--) {
-                  dish.comments.id(dish.comments[i]._id).remove();
-                }
-                dish.save().then(
-                  (dish) => {
-                    res.statusCode = 200;
-                    res.setHeader("Content-Type", "application/json");
-                    res.json(dish);
-                  },
-                  (err) => next(err)
-                );
-              } else {
-                err = new Error("Dish " + req.params.dishId + " not found");
-                err.status = 404;
-                return next(err);
-              }
-            },
-            (err) => next(err)
-          )
-          .catch((err) => next(err));
-      });
-
-    router
-      .route("/recipes/:recipeId/comments/:commentId")
-      .get((req, res, next) => {
-        Recipe.findById(req.params.recipeId)
-          .populate("comments.author")
-          .then(
-            (recipe) => {
-              if (
-                recipe != null &&
-                recipe.comments.id(req.params.commentId) != null
-              ) {
-                res.statusCode = 200;
-                res.setHeader("Content-Type", "application/json");
-                res.json(recipe.comments.id(req.params.commentId));
-              } else if (recipe == null) {
-                err = new Error("Recipe " + req.params.recipeId + " not found");
-                err.status = 404;
-                return next(err);
-              } else {
-                err = new Error(
-                  "Comment " + req.params.commentId + " not found"
-                );
-                err.status = 404;
-                return next(err);
-              }
-            },
-            (err) => next(err)
-          )
-          .catch((err) => next(err));
-      })
-      .post(authenticate.verifyUser, (req, res, next) => {
-        res.statusCode = 403;
-        res.end(
-          "POST operation not supported on /recipes/" +
-            req.params.recipeId +
-            "/comments/" +
-            req.params.commentId
-        );
-      })
-      .put(authenticate.verifyUser, (req, res, next) => {
-        Recipes.findById(req.params.recipeId)
-          .then(
-            (recipe) => {
-              if (
-                recipe != null &&
-                recipe.comments.id(req.params.commentId) != null
-              ) {
-                if (req.body.rating) {
-                  recipe.comments.id(req.params.commentId).rating =
-                    req.body.rating;
-                }
-                if (req.body.comment) {
-                  recipe.comments.id(req.params.commentId).comment =
-                    req.body.comment;
-                }
-                recipe.save().then(
-                  (recipe) => {
-                    Recipe.findById(recipe._id)
-                      .populate("comments.author")
-                      .then((recipe) => {
-                        res.statusCode = 200;
-                        res.setHeader("Content-Type", "application/json");
-                        res.json(recipe);
-                      });
-                  },
-                  (err) => next(err)
-                );
-              } else if (recipe == null) {
-                err = new Error("Recipe " + req.params.recipeId + " not found");
-                err.status = 404;
-                return next(err);
-              } else {
-                err = new Error(
-                  "Comment " + req.params.commentId + " not found"
-                );
-                err.status = 404;
-                return next(err);
-              }
-            },
-            (err) => next(err)
-          )
-          .catch((err) => next(err));
-      })
-      .delete(authenticate.verifyUser, (req, res, next) => {
-        Recipe.findById(req.params.recipeId)
-          .then(
-            (recipe) => {
-              if (
-                recipe != null &&
-                recipe.comments.id(req.params.commentId) != null
-              ) {
-                recipe.comments.id(req.params.commentId).remove();
-                recipe.save().then(
-                  (recipe) => {
-                    Recipe.findById(recipe._id)
-                      .populate("comments.author")
-                      .then((recipe) => {
-                        res.statusCode = 200;
-                        res.setHeader("Content-Type", "application/json");
-                        res.json(recipe);
-                      });
-                  },
-                  (err) => next(err)
-                );
-              } else if (recipe == null) {
-                err = new Error("Recipe " + req.params.recipeId + " not found");
-                err.status = 404;
-                return next(err);
-              } else {
-                err = new Error(
-                  "Comment " + req.params.commentId + " not found"
-                );
-                err.status = 404;
-                return next(err);
-              }
-            },
-            (err) => next(err)
-          )
-          .catch((err) => next(err));
-      });
   });
+
+router
+  .route("/recipes/:recipeId/comments")
+  .get(async (req, res) => {
+    Recipe.findById(req.params.recipeId)
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'user',
+        }
+     })
+      .then((recipe) => {
+        if (recipe != null) {
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.json(recipe.comments);
+        }
+      }).catch((err) => res.send(err))
+  })
+  .post(authenticate.verifyUser, async (req, res) => {
+    try {
+      const recipe = await Recipe.findOne({ _id: req.params.recipeId });
+      const c = new Comment({ comment: req.body.comment, user: req.user._id });
+      c.save();
+      recipe.comments.push(c);
+      recipe.save().then((recipe) => res.send(c));
+    } catch {
+      res.status(404);
+      res.send({ error: "Recipe doesn't exist!" });
+    }
+  })
+  .put(authenticate.verifyUser, (req, res, next) => {
+    res.statusCode = 403;
+    res.end(
+      "PUT operation not supported on /recipes/" +
+      req.params.recipeId +
+      "/comments"
+    );
+  })
+  .delete(authenticate.verifyUser, async (req, res) => {
+    try {
+      const recipe = await Recipe.findOne({ _id: req.params.recipeId });
+      for (var i = recipe.comments.length - 1; i >= 0; i--) {
+        await Comment.deleteOne({ _id: recipe.comments[0] });
+        recipe.comments.splice(0, 1);
+      }
+      recipe.save().then((recipe) => res.send(recipe));
+    } catch {
+      res.status(404);
+      res.send({ error: "Recipe doesn't exist!" });
+    }
+  });
+
+router
+  .route("/comments/:commentId")
+  .get(async (req, res) => {
+    try {
+      const comment = await Comment.findOne({ _id: req.params.commentId });
+      res.send(comment);
+    } catch {
+      res.status(404);
+      res.send({ error: "Comment doesn't exist!" });
+    }
+  })
+  .post(authenticate.verifyUser, async (req, res) => {
+    res.statusCode = 403;
+    res.end(
+      "POST operation not supported on /comments/" +
+      req.params.commentId
+    );
+  })
+  .put(authenticate.verifyUser, async (req, res) => {
+    try {
+      const comment = await Comment.findOne({ _id: req.params.commentId });
+      comment.body = req.body.body;
+      comment.save().then((comment) => res.send(comment));
+    } catch {
+      res.status(404);
+      res.send({ error: "Comment doesn't exist!" });
+    }
+  })
+  .delete(authenticate.verifyUser, async (req, res) => {
+    try {
+      Comment.findOneAndDelete({ _id: req.params.commentId })
+      res.send('Deleted');
+    } catch {
+      res.status(404);
+      res.send({ error: "Recipe doesn't exist!" });
+    }
+  });
+
 
 module.exports = router;
