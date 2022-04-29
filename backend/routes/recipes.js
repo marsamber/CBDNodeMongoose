@@ -5,6 +5,7 @@ const Comment = require("../models/Comment");
 const Fs = require("fs");
 const { parse } = require("csv-parse");
 const authenticate = require("../authenticate");
+const cors = require('./cors');
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -32,51 +33,58 @@ router.post("/import", async (req, res) => {
       });
     })
     .on("end", function () {
-      console.log(" End of file import");
+      console.log("End of file import");
       res.json({ success: "Data imported successfully.", status: 200 });
     });
 });
 
-router
-  .route("/")
-  .get(async (req, res) => {
+router.route("/")
+  .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+  .get(cors.cors, async (req, res) => {
     const recipes = await Recipe.find();
     res.send(recipes);
-  })
-  .delete(authenticate.verifyUser, async (req, res) => {
+  }).delete(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
     await Recipe.deleteMany();
     const recipes = await Recipe.find();
-    res.send(recipes);
-  })
-  .post(authenticate.verifyUser, async (req, res) => {
-    const recipe = new Recipe({
-      title: req.body.title,
-      instructions: req.body.instructions,
-      image: req.body.image,
-      ingredients: req.body.ingredients,
-    });
-    await recipe.save();
-    res.send(recipe);
+    if (recipes.length === 0) { res.status(204); res.end(); }
+    else { res.status(404); res.send("We couldn't delete!") }
+  }).put(cors.corsWithOptions, authenticate.verifyUser, (req, res) => {
+    res.status(405);
+    res.end("PUT operation not supported on /recipes");
+  }).post(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
+    if (!req.body.title) {
+      res.status(400);
+      res.end("You must give a title for your recipe!");
+    } else {
+      const recipe = new Recipe({
+        title: req.body.title,
+        instructions: req.body.instructions,
+        image: req.body.image,
+        ingredients: req.body.ingredients,
+      });
+      await recipe.save();
+      res.status(201);
+      res.send(recipe);
+    }
   });
 
-router
-  .route("/:id")
-  .get(async (req, res) => {
+router.route("/:id")
+  .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+  .get(cors.cors, async (req, res) => {
     try {
       const recipe = await Recipe.findOne({ _id: req.params.id })
-      .populate({
-        path: "comments",
-        populate: {
-          path: "user",
-        },
-      });
+        .populate({
+          path: "comments",
+          populate: {
+            path: "user",
+          },
+        });
       res.send(recipe);
     } catch {
       res.status(404);
       res.send({ error: "Recipe doesn't exist!" });
     }
-  })
-  .delete(authenticate.verifyUser, async (req, res) => {
+  }).delete(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
     try {
       await Recipe.deleteOne({ _id: req.params.id });
       res.status(204).send();
@@ -84,8 +92,7 @@ router
       res.status(404);
       res.send({ error: "Recipe doesn't exist!" });
     }
-  })
-  .patch(authenticate.verifyUser, async (req, res) => {
+  }).put(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
     try {
       const recipe = await Recipe.findOne({ _id: req.params.id });
 
@@ -113,53 +120,51 @@ router
     }
   });
 
-router
-  .route("/:recipeId/comments")
-  .get(async (req, res) => {
-    Recipe.findById(req.params.recipeId)
-      .populate({
-        path: "comments",
-        populate: {
-          path: "user",
-        },
-      })
-      .then((recipe) => {
-        if (recipe != null) {
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.json(recipe.comments);
-        }
-      })
-      .catch((err) => res.send(err));
-  })
-  .post(authenticate.verifyUser, async (req, res) => {
+router.route("/:recipeId/comments")
+  .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+  .get(cors.cors, async (req, res) => {
     try {
-      const recipe = await Recipe.findOne({ _id: req.params.recipeId });
-      const c = new Comment({ comment: req.body.comment, user: req.user._id });
-      c.save();
-      recipe.comments.push(c);
-      recipe.save().then((recipe) => res.send(c));
+      const recipe = await Recipe.findById(req.params.recipeId)
+        .populate({
+          path: "comments",
+          populate: {
+            path: "user",
+          },
+        })
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.json(recipe.comments);
     } catch {
       res.status(404);
       res.send({ error: "Recipe doesn't exist!" });
     }
-  })
-  .put(authenticate.verifyUser, (req, res, next) => {
-    res.statusCode = 403;
+  }).post(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
+    try {
+      const recipe = await Recipe.findOne({ _id: req.params.recipeId });
+      const comment = new Comment({ comment: req.body.comment, user: req.user._id });
+      comment.save();
+      recipe.comments.push(comment);
+      res.status(201);
+      recipe.save().then((recipe) => res.send(comment));
+    } catch {
+      res.status(404);
+      res.send({ error: "Recipe doesn't exist!" });
+    }
+  }).put(cors.corsWithOptions, authenticate.verifyUser, (req, res) => {
+    res.status(405);
     res.end(
       "PUT operation not supported on /recipes/" +
-        req.params.recipeId +
-        "/comments"
+      req.params.recipeId +
+      "/comments"
     );
-  })
-  .delete(authenticate.verifyUser, async (req, res) => {
+  }).delete(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
     try {
       const recipe = await Recipe.findOne({ _id: req.params.recipeId });
       for (var i = recipe.comments.length - 1; i >= 0; i--) {
         await Comment.deleteOne({ _id: recipe.comments[0] });
         recipe.comments.splice(0, 1);
       }
-      recipe.save().then((recipe) => res.send(recipe));
+      res.status(204).end();
     } catch {
       res.status(404);
       res.send({ error: "Recipe doesn't exist!" });
