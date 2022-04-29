@@ -9,7 +9,7 @@ const authenticate = require("../authenticate");
 const router = express.Router();
 router.use(bodyParser.json());
 
-router.post("/recipes/import", async (req, res) => {
+router.post("/import", async (req, res) => {
   let inputStream = Fs.createReadStream("./src/dataset.csv", "utf8");
 
   inputStream
@@ -37,14 +37,14 @@ router.post("/recipes/import", async (req, res) => {
 });
 
 router
-  .route("/recipes")
+  .route("/")
   .get(async (req, res) => {
     const recipes = await Recipe.find().populate({
-      path: 'comments',
+      path: "comments",
       populate: {
-        path: 'user',
-      }
-   });
+        path: "user",
+      },
+    });
     res.send(recipes);
   })
   .delete(authenticate.verifyUser, async (req, res) => {
@@ -64,7 +64,7 @@ router
   });
 
 router
-  .route("/recipes/:id")
+  .route("/:id")
   .get(async (req, res) => {
     try {
       const recipe = await Recipe.findOne({ _id: req.params.id });
@@ -112,22 +112,23 @@ router
   });
 
 router
-  .route("/recipes/:recipeId/comments")
+  .route("/:recipeId/comments")
   .get(async (req, res) => {
     Recipe.findById(req.params.recipeId)
       .populate({
-        path: 'comments',
+        path: "comments",
         populate: {
-          path: 'user',
-        }
-     })
+          path: "user",
+        },
+      })
       .then((recipe) => {
         if (recipe != null) {
           res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
+          res.setHeader("Content-Type", "application/json");
           res.json(recipe.comments);
         }
-      }).catch((err) => res.send(err))
+      })
+      .catch((err) => res.send(err));
   })
   .post(authenticate.verifyUser, async (req, res) => {
     try {
@@ -145,8 +146,8 @@ router
     res.statusCode = 403;
     res.end(
       "PUT operation not supported on /recipes/" +
-      req.params.recipeId +
-      "/comments"
+        req.params.recipeId +
+        "/comments"
     );
   })
   .delete(authenticate.verifyUser, async (req, res) => {
@@ -162,44 +163,5 @@ router
       res.send({ error: "Recipe doesn't exist!" });
     }
   });
-
-router
-  .route("/comments/:commentId")
-  .get(async (req, res) => {
-    try {
-      const comment = await Comment.findOne({ _id: req.params.commentId });
-      res.send(comment);
-    } catch {
-      res.status(404);
-      res.send({ error: "Comment doesn't exist!" });
-    }
-  })
-  .post(authenticate.verifyUser, async (req, res) => {
-    res.statusCode = 403;
-    res.end(
-      "POST operation not supported on /comments/" +
-      req.params.commentId
-    );
-  })
-  .put(authenticate.verifyUser, async (req, res) => {
-    try {
-      const comment = await Comment.findOne({ _id: req.params.commentId });
-      comment.body = req.body.body;
-      comment.save().then((comment) => res.send(comment));
-    } catch {
-      res.status(404);
-      res.send({ error: "Comment doesn't exist!" });
-    }
-  })
-  .delete(authenticate.verifyUser, async (req, res) => {
-    try {
-      Comment.findOneAndDelete({ _id: req.params.commentId })
-      res.send('Deleted');
-    } catch {
-      res.status(404);
-      res.send({ error: "Recipe doesn't exist!" });
-    }
-  });
-
 
 module.exports = router;
