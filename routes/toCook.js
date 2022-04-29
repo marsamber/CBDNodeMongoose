@@ -52,8 +52,7 @@ router
   .delete(authenticate.verifyUser, async (req, res) => {
     try {
       await ToCook.deleteOne({ id: req.params.tocookId });
-      const toCook = await ToCook.findById(req.params.tocookId);
-      res.send(toCook);
+      res.send('Deleted');
     } catch {
       res.status(404);
       res.send({ error: "To cook doesn't exist!" });
