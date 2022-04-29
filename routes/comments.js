@@ -1,12 +1,20 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const Cooked = require("../models/Cooked");
+const Comment = require("../models/Comment");
+const Recipe = require("../models/Recipe");
 const Fs = require("fs");
 const { parse } = require("csv-parse");
 const authenticate = require("../authenticate");
 
 const router = express.Router();
 router.use(bodyParser.json());
+
+router
+  .route("/")
+  .get(authenticate.verifyUser, async (req, res) => {
+    const comm = await Comment.find();
+    res.send(comm);
+  })
 
 router
   .route("/:commentId")
@@ -28,7 +36,7 @@ router
   .put(authenticate.verifyUser, async (req, res) => {
     try {
       const comment = await Comment.findOne({ _id: req.params.commentId });
-      comment.body = req.body.body;
+      comment.comment = req.body.comment;
       comment.save().then((comment) => res.send(comment));
     } catch {
       res.status(404);
@@ -37,11 +45,15 @@ router
   })
   .delete(authenticate.verifyUser, async (req, res) => {
     try {
-      Comment.findOneAndDelete({ _id: req.params.commentId });
+      const r = await Recipe.findOne({comments:{$in:req.params.commentId}});
+      var i = r.comments.indexOf( req.params.commentId );
+      r.comments.splice( i, 1 );
+      r.save();
+      Comment.findOneAndDelete({ _id: req.params.commentId});
       res.send("Deleted");
     } catch {
       res.status(404);
-      res.send({ error: "Recipe doesn't exist!" });
+      res.send({ error: "Comment doesn't exist!" });
     }
   });
 

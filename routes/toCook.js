@@ -11,7 +11,7 @@ router.use(bodyParser.json());
 router
   .route("/")
   .get(authenticate.verifyUser, async (req, res) => {
-    const toCook = await ToCook.find({ user: req.user._id });
+    const toCook = await ToCook.find({ user: req.user._id }).populate("recipe");
     res.send(toCook);
   })
   .delete(authenticate.verifyUser, async (req, res) => {
@@ -22,6 +22,12 @@ router
 
 router
   .route("/recipes/:recipeId")
+  .get(authenticate.verifyUser, async (req, res) => {
+    res.statusCode = 403;
+    res.end(
+      "GET operation not supported on /tocook/recipes/" + req.params.recipeId
+    );
+  })
   .post(authenticate.verifyUser, async (req, res) => {
     const toCook = new ToCook({
       user: req.user._id,
