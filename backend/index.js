@@ -22,8 +22,8 @@ mongoose.connect(config.mongoUrl, { useNewUrlParser: true }).then(() => {
   app.use("/users", usersRouter);
   app.use("/api/recipes", recipesRouter);
   app.use("/api/comments", commentsRouter);
-  app.use("/api/tocook", toCookRouter);
-  app.use("/api/tobuy", toBuyRouter);
+  app.use("/api/toCook", toCookRouter);
+  app.use("/api/toBuy", toBuyRouter);
   app.use("/api/cooked", cookedRouter);
   app.use("/api/favourite", favouriteRouter);
 

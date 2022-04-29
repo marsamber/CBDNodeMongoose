@@ -1,8 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Favourite = require('../models/Favourite');
-const Fs = require('fs');
-const { parse } = require('csv-parse');
 const authenticate = require('../authenticate');
 
 const router = express.Router();
@@ -10,28 +8,45 @@ router.use(bodyParser.json());
 
 router.route('/')
     .get(authenticate.verifyUser, async (req, res) => {
-        const favourite = await Favourite.find({ user: req.user._id });
+        const favourite = await Favourite.find({ user: req.user._id }).populate({ path: "recipe" });
         res.send(favourite);
     }).delete(authenticate.verifyUser, async (req, res) => {
         await Favourite.deleteMany({ user: req.user._id });
         const favourite = await Favourite.find({ user: req.user._id });
-        res.send(favourite);
+        if (favourite.length === 0) res.status(204).end();
+        else { res.status(404); res.send("We couldn't delete!") }
+    }).put(authenticate.verifyUser, (req, res) => {
+        res.status(405);
+        res.end("PUT operation not supported on /favourite");
+    }).post(authenticate.verifyUser, (req, res) => {
+        res.status(405);
+        res.end("POST operation not supported on /favourite");
     });
 
 router.route('/recipes/:recipeId')
-    .post(authenticate.verifyUser, async (req, res) => {
+    .get(authenticate.verifyUser, (req, res) => {
+        res.status(405);
+        res.end("GET operation not supported on /favourite/recipes/" + req.params.recipeId);
+    }).delete(authenticate.verifyUser, (req, res) => {
+        res.status(405);
+        res.end("DELETE operation not supported on /favourite/recipes/" + req.params.recipeId);
+    }).put(authenticate.verifyUser, (req, res) => {
+        res.status(405);
+        res.end("PUT operation not supported on /favourite/recipes/" + req.params.recipeId);
+    }).post(authenticate.verifyUser, async (req, res) => {
         const favourite = new Favourite({
             user: req.user._id,
             recipe: req.params.recipeId,
         });
         await favourite.save();
+        res.status(201);
         res.send(favourite);
     });
 
 router.route('/:favouriteId')
     .get(authenticate.verifyUser, async (req, res) => {
         try {
-            const favourite = await Favourite.findById(req.params.favouriteId);
+            const favourite = await Favourite.findById(req.params.favouriteId).populate({ path: "recipe" });
             res.send(favourite);
         } catch {
             res.status(404);
@@ -40,13 +55,12 @@ router.route('/:favouriteId')
     }).delete(authenticate.verifyUser, async (req, res) => {
         try {
             await Favourite.deleteOne({ id: req.params.favouriteId });
-            const favourite = await Favourite.findById(req.params.favouriteId);
-            res.send(favourite);
+            res.status(204).end();
         } catch {
             res.status(404);
             res.send({ error: "Favourite doesn't exist!" });
         }
-    }).patch(authenticate.verifyUser, async (req, res) => {
+    }).put(authenticate.verifyUser, async (req, res) => {
         try {
             const favourite = await Favourite.findOne({ _id: req.params.favouriteId });
             if (req.body.like) {
@@ -58,6 +72,9 @@ router.route('/:favouriteId')
             res.status(404);
             res.send({ error: "Favourite doesn't exist!" });
         }
+    }).post(authenticate.verifyUser, (req, res) => {
+        res.status(405);
+        res.end("POST operation not supported on /favourite/" + req.params.cookedId);
     });
 
 module.exports = router;
