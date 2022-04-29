@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import "./recipe.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import recipesAPI from '../APIs/recipesAPI';
+import getImg from '../images/getImages'
 // import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -44,7 +45,7 @@ function Recipe() {
     <Row>
         <Col>
         <Row>
-        <img src={recipe.image} alt={recipe.image}/>
+        <img src={getImg(recipe.image)} alt={recipe.image}/>
         </Row>
         </Col>
         <Col md={{span:1,}}>Comments</Col>
