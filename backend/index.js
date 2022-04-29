@@ -11,6 +11,9 @@ const recipesRouter = require("./routes/recipes");
 const commentsRouter = require("./routes/comments");
 const toCookRouter = require("./routes/toCook");
 const toBuyRouter = require("./routes/toBuy");
+const cookedRouter = require('./routes/cooked');
+const favouriteRouter = require('./routes/favourite');
+  
 mongoose.connect(config.mongoUrl, { useNewUrlParser: true }).then(() => {
   const app = express();
   app.use(logger("dev"));
@@ -21,6 +24,8 @@ mongoose.connect(config.mongoUrl, { useNewUrlParser: true }).then(() => {
   app.use("/api/comments", commentsRouter);
   app.use("/api/tocook", toCookRouter);
   app.use("/api/tobuy", toBuyRouter);
+  app.use("/api/cooked", cookedRouter);
+  app.use("/api/favourite", favouriteRouter);
 
   app.listen(5000, () => {
     console.log("Server has started!");
