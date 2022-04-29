@@ -5,6 +5,7 @@ const Comment = require("../models/Comment");
 const Fs = require("fs");
 const { parse } = require("csv-parse");
 const authenticate = require("../authenticate");
+const cors = require('./cors');
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -38,18 +39,19 @@ router.post("/import", async (req, res) => {
 });
 
 router.route("/")
-  .get(async (req, res) => {
+  .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+  .get(cors.cors, async (req, res) => {
     const recipes = await Recipe.find();
     res.send(recipes);
-  }).delete(authenticate.verifyUser, async (req, res) => {
+  }).delete(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
     await Recipe.deleteMany();
     const recipes = await Recipe.find();
     if (recipes.length === 0) { res.status(204); res.end(); }
     else { res.status(404); res.send("We couldn't delete!") }
-  }).put(authenticate.verifyUser, (req, res) => {
+  }).put(cors.corsWithOptions, authenticate.verifyUser, (req, res) => {
     res.status(405);
     res.end("PUT operation not supported on /recipes");
-  }).post(authenticate.verifyUser, async (req, res) => {
+  }).post(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
     if (!req.body.title) {
       res.status(400);
       res.end("You must give a title for your recipe!");
@@ -67,7 +69,8 @@ router.route("/")
   });
 
 router.route("/:id")
-  .get(async (req, res) => {
+  .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+  .get(cors.cors, async (req, res) => {
     try {
       const recipe = await Recipe.findOne({ _id: req.params.id })
         .populate({
@@ -81,7 +84,7 @@ router.route("/:id")
       res.status(404);
       res.send({ error: "Recipe doesn't exist!" });
     }
-  }).delete(authenticate.verifyUser, async (req, res) => {
+  }).delete(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
     try {
       await Recipe.deleteOne({ _id: req.params.id });
       res.status(204).send();
@@ -89,7 +92,7 @@ router.route("/:id")
       res.status(404);
       res.send({ error: "Recipe doesn't exist!" });
     }
-  }).put(authenticate.verifyUser, async (req, res) => {
+  }).put(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
     try {
       const recipe = await Recipe.findOne({ _id: req.params.id });
 
@@ -118,7 +121,8 @@ router.route("/:id")
   });
 
 router.route("/:recipeId/comments")
-  .get(async (req, res) => {
+  .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+  .get(cors.cors, async (req, res) => {
     try {
       const recipe = await Recipe.findById(req.params.recipeId)
         .populate({
@@ -134,7 +138,7 @@ router.route("/:recipeId/comments")
       res.status(404);
       res.send({ error: "Recipe doesn't exist!" });
     }
-  }).post(authenticate.verifyUser, async (req, res) => {
+  }).post(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
     try {
       const recipe = await Recipe.findOne({ _id: req.params.recipeId });
       const comment = new Comment({ comment: req.body.comment, user: req.user._id });
@@ -146,14 +150,14 @@ router.route("/:recipeId/comments")
       res.status(404);
       res.send({ error: "Recipe doesn't exist!" });
     }
-  }).put(authenticate.verifyUser, (req, res) => {
+  }).put(cors.corsWithOptions, authenticate.verifyUser, (req, res) => {
     res.status(405);
     res.end(
       "PUT operation not supported on /recipes/" +
       req.params.recipeId +
       "/comments"
     );
-  }).delete(authenticate.verifyUser, async (req, res) => {
+  }).delete(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
     try {
       const recipe = await Recipe.findOne({ _id: req.params.recipeId });
       for (var i = recipe.comments.length - 1; i >= 0; i--) {
