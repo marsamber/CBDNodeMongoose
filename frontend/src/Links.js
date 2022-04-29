@@ -1,17 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+import { BrowserRouter, Route, Routes, Navigate, Router } from 'react-router-dom';
 import App from './App';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Recipe from './modules/recipes/Recipe'
 
-ReactDOM.render(
-  <BrowserRouter>
-    <Routes>
+
+
+const Links = () => {
+
+<Routes>
             <Route path='/' element={ <App />} />
             <Route path='/receta/:id' element={<Recipe/>}/>
             <Route path='*' element={<Navigate replace to="/"/>}/>
         </Routes>
-  </BrowserRouter>,
-  document.getElementById('root')
-);
+}
+
+export default Links;
