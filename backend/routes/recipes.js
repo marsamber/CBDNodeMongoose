@@ -40,12 +40,7 @@ router.post("/import", async (req, res) => {
 router
   .route("/")
   .get(async (req, res) => {
-    const recipes = await Recipe.find().populate({
-      path: "comments",
-      populate: {
-        path: "user",
-      },
-    });
+    const recipes = await Recipe.find();
     res.send(recipes);
   })
   .delete(authenticate.verifyUser, async (req, res) => {
@@ -68,7 +63,13 @@ router
   .route("/:id")
   .get(async (req, res) => {
     try {
-      const recipe = await Recipe.findOne({ _id: req.params.id });
+      const recipe = await Recipe.findOne({ _id: req.params.id })
+      .populate({
+        path: "comments",
+        populate: {
+          path: "user",
+        },
+      });
       res.send(recipe);
     } catch {
       res.status(404);
