@@ -6,7 +6,7 @@ const toCookSchema = new Schema({
 		type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
 	},
-	ingredient: {
+	recipe: {
 		type: mongoose.Schema.Types.ObjectId,
         ref: 'Recipe'
 	},

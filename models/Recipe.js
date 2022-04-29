@@ -9,6 +9,10 @@ const recipeSchema = new Schema({
 	ingredients: [{
 		type: String
 	}],
+	comments: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Comment'
+	}],
 	instructions: {
 		type: String,
 		default: ''
