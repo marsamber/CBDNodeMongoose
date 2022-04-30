@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Alert, Container, Col, Row, ListGroup } from 'react-bootstrap';
+import { Alert, Container, Col, Row, ListGroup, Form, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import "./recipe.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import recipesAPI from '../APIs/recipesAPI';
-//import getImg from '../images/getImages'
+import getImg from '../images/getImages'
 import img from './ex.jpg'
 // import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,33 +12,38 @@ import img from './ex.jpg'
 function Recipe() {
     const params = useParams();
     const recipeId = params.id;
-    const [recipe, setRecipe] = useState({
-        "title": 'Pan',
-        "ingredients": ['Lavadura', 'Amor', 'Aceite', 'Harina'],
-        "comments": ['Mu rico', 'Se me ha quemado bro'],
-        "instructions": 'Amasalo todo y para el horno',
-        "image": 'crispy-salt-and-pepper-potatoes-dan-kluger'
-    });
+    const [recipe, setRecipe] = useState(null);
 
     useEffect(() => {
-        // recipesAPI.getRecipeById(recipeId)
-        // .then((recipe)=>setRecipe(recipe));
-    }, []);
+        recipesAPI.getRecipeById(recipeId)
+            .then((recipe) => setRecipe(recipe));
+    }, [recipe]);
+
+    function comment(event) {
+        event.preventDefault();
+    
+        let commentt= event.target.elements.comment.value;
+        
+        const c = {
+          comment: commentt,
+        }
+        recipesAPI.addComment(recipeId, c);
+      }
 
     if (!recipe) return (
         <Container>
             <Row className="centertext main">
                 <Col>
                     <Alert variant="warning">
-                        <Alert.Heading> No existe esta receta.</Alert.Heading>
-                        <p>Selecciona una receta existente.</p>
+                        <Alert.Heading> This recipe doesn't exist.</Alert.Heading>
+                        <p>Choose an existing recipe.</p>
                     </Alert>
                 </Col>
             </Row>
         </Container>
     );
 
-
+    console.log(recipe.comments)
     return (<Container>
         <Row className="centertext main">
             <Col>
@@ -48,12 +53,12 @@ function Recipe() {
         <Row>
             <Col>
                 <Row>
-                    <img src={img} />
-                    {/* <img src={getImg(recipe.image)} alt={recipe.image}/> */}
+                    {/* <img src={img} /> */}
+                    <img src={getImg(recipe.image)} alt={recipe.image}/>
                 </Row>
                 <Row>
                     <Col>
-                        <h2>Ingredientes</h2>
+                        <h2>Ingredients</h2>
                         <ListGroup variant="flush">
                             {recipe.ingredients.map((i) => {
                                 return <ListGroup.Item>{i}</ListGroup.Item>
@@ -63,14 +68,38 @@ function Recipe() {
                 </Row>
                 <Row>
                     <Col>
-                        <h2>Intrucciones</h2>
+                        <h2>Instructions</h2>
                         {recipe.instructions}
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <h2>Comentarios</h2>
-                        {recipe.comments}
+                        <h2>Comments</h2>
+                        {recipe.comments.map((c) => {
+                            return <Alert variant="dark">
+                                <Alert.Heading>{c.user.firstname} {c.user.lastname}</Alert.Heading>
+                                <p>
+                                    {c.comment}
+                                </p>
+                                <hr />
+                                <p className="mb-0">
+                                    {c.createdAt}
+                                </p>
+                            </Alert>
+                        })}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form onSubmit={comment}>
+                            <Form.Group className="mb-3" controlId="comment">
+                                <Form.Label>New comment</Form.Label>
+                                <Form.Control type="text" placeholder="Enter comment" />
+                            </Form.Group>
+                            <Button variant="primary" type="submit">
+                                Submit
+                            </Button>
+                        </Form>
                     </Col>
                 </Row>
             </Col>
@@ -80,3 +109,5 @@ function Recipe() {
 }
 
 export default Recipe;
+
+// 625ee7e66f3c7485efa3d7d3

@@ -9,7 +9,7 @@ ReactDOM.render(
   <BrowserRouter>
     <Routes>
             <Route path='/' element={ <App />} />
-            <Route path='/receta/:id' element={<Recipe/>}/>
+            <Route path='/recipe/:id' element={<Recipe/>}/>
             <Route path='*' element={<Navigate replace to="/"/>}/>
         </Routes>
   </BrowserRouter>,

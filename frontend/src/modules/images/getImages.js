@@ -40751,10 +40751,7 @@ const lsr=[
 ]
 
 export default function getImg(id){
-    console.log(id)
     let el='a'+id.replaceAll('-','')
-    console.log(el)
     let n =lsr.indexOf(el);
-    console.log(n)
 return ls[n];
 }
