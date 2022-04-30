@@ -20,6 +20,7 @@
   "homepage": "https://github.com/marsamber/CBDNodeMongoose#readme",
   "dependencies": {
     "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
     "csv-parse": "^5.0.4",
     "csv-reader": "^1.0.8",
     "express": "^4.17.3",
