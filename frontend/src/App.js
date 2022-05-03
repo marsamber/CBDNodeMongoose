@@ -6,8 +6,9 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} alt="logo" />
-        <p>
-          Find the best recipes and share yours!
+        <p className="msgWelcome">
+          Find the best <a href="/recipes" className='link'>recipes</a> and share yours!
+          <br/>
         </p>
       </header>
     </div>

@@ -1,4 +1,4 @@
-import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import banner from '../../banner.png';
 import '../../index.css'
 
@@ -8,16 +8,17 @@ const PrincipalNavbar = () => {
     const edit = () =>{}
     const logout = async () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("username");
         window.location.href = "/";
     }
     if (token) {
         return (<Navbar expand="lg">
             <Container>
-                <Navbar.Brand href="/recipes"><img src={banner} alt="banner" height={50} /></Navbar.Brand>
+                <Navbar.Brand href="/recipes?page=1"><img src={banner} alt="banner" height={50} /></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="#home">Recipes</Nav.Link>
+                        <Nav.Link href="/recipes?page=1">Recipes</Nav.Link>
                         <NavDropdown title={username} id="basic-nav-dropdown">
                             <NavDropdown.Item href="#profile">&nbsp;Profile</NavDropdown.Item>
                             <NavDropdown.Item ><button className='buttonNavbar' onClick={() => edit()}>Edit</button></NavDropdown.Item>
@@ -30,7 +31,7 @@ const PrincipalNavbar = () => {
     } else {
         return (<Navbar expand="lg">
             <Container>
-                <Navbar.Brand href="/"><img src={banner} alt="banner" height={50} /></Navbar.Brand>
+                <Navbar.Brand href="/recipes?page=1"><img src={banner} alt="banner" height={50} /></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">

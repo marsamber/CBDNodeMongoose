@@ -25,7 +25,7 @@
   font-family: 'Square Peg', cursive;
 }
 
-p{
+.msgWelcome{
   font-size: 200%;
 }
 
@@ -40,4 +40,14 @@ p{
   to {
     transform: rotate(360deg);
   }
+}
+
+.link{
+  color: #916747;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.link:hover{
+  color:#F4CE86;
 }

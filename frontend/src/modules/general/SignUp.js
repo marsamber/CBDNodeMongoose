@@ -42,7 +42,7 @@ const SignUp = () => {
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" placeholder="Password" onChange={(e) => setUser({ ...user, password: e.target.value })} required={true} />
         </Form.Group>
-        <Button variant="secondary" type="submit">
+        <Button id="btnPag" type="submit">
             Submit
         </Button>
     </Form>

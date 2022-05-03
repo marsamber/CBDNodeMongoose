@@ -4,10 +4,12 @@ import { useParams } from 'react-router-dom';
 import "./recipe.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import recipesAPI from '../APIs/recipesAPI';
+import isLogged from '../general/authenticated'
 // import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function Recipe() {
+    // if(!isLogged()) window.location.href = '/';
     const params = useParams();
     const recipeId = params.id;
     const [recipe, setRecipe] = useState(null);

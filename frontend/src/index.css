@@ -36,3 +36,34 @@ code {
   background-color: transparent;
   border: none;
 }
+
+#cardTitle{
+  font-family: 'Square Peg', cursive;
+  /* font-weight: bold; */
+  font-size: 150%;
+}
+
+#btnPag {
+  background-color:#FBF5E6;
+  color:black;
+  border:none;
+}
+
+#btnPag:hover, #btnPag:active{
+  background-color:#F6DCA9;
+}
+
+#btnPagAct {
+  background-color:#F6DCA9;
+  color:black;
+  border:none;
+}
+
+#btnPagAct:hover, #btnPagAct:active{
+  background-color:#FBF5E6;
+}
+
+.alertDiv{
+  width: 50%;
+  margin: auto;
+}
