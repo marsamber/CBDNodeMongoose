@@ -10,16 +10,18 @@ router.use(bodyParser.json());
 
 router.route('/')
   .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-  .get(cors.cors, (req, res, next) => {
+  .get(cors.corsWithOptions, (req, res, next) => {
     User.find({}).then((users) => {
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
       res.json(users);
     }, (err) => next(err))
       .catch((err) => next(err));
-  }).delete(cors.cors, (req, res) => {
-    res.status(405);
-    res.end("Only GET operation supported on /users");
+  }).delete(cors.cors, async(req, res) => {
+    await User.deleteMany();
+    const users = await User.find();
+    if (users.length === 0) { res.status(204); res.end(); }
+    else { res.status(404); res.send("We couldn't delete!") }
   }).put(cors.cors, (req, res) => {
     res.status(405);
     res.end("Only GET operation supported on /users");
@@ -28,7 +30,19 @@ router.route('/')
     res.end("Only GET operation supported on /users");
   });
 
-router.route('signup')
+router.route('/:id')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.delete(cors.cors, async (req, res) => {
+  try {
+    await User.deleteOne({ _id: req.params.id });
+    res.status(204).send();
+  } catch {
+    res.status(404);
+    res.send({ error: "User doesn't exist!" });
+  }
+})
+
+router.route('/signup')
   .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
   .post(cors.cors, (req, res, next) => {
     User.register(new User({ username: req.body.username }), req.body.password, (err, user) => {
@@ -86,7 +100,7 @@ router.route('/login')
 
 router.route('/edit')
   .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-  .put(authenticate.verifyUser, (req, res, next) => {
+  .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     User.findById(req.user).then((user) => {
       if (req.body.email)
         user.email = req.body.email;
@@ -116,31 +130,31 @@ router.route('/edit')
 
 //TENGO QUE MODIFICARLO PARA PODER HACER LOGOUT CON JWT (BLACKLIST)
 //NO ME FUNCIONA
-router.route('/logout')
-  .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-  .get(cors.cors, (req, res, next) => {
-    if (req.get('Authorization')) {
-      res.removeHeader('Authorization');
-      res.send("Logout successful")
-    }
-    //   if (req.session) {
-    //     req.session.destroy();
-    //     res.clearCookie('session-id');
-    //     res.redirect('/');
-    else {
-      var err = new Error('You are not logged in!');
-      err.status = 403;
-      next(err);
-    }
-  }).delete(cors.cors, (req, res) => {
-    res.status(405);
-    res.end("Only GET operation supported on /users/logout");
-  }).post(cors.cors, (req, res) => {
-    res.status(405);
-    res.end("Only GET operation supported on /users/logout");
-  }).put(cors.cors, (req, res) => {
-    res.status(405);
-    res.end("Only GET operation supported on /users/logout");
-  });
+// router.route('/logout')
+//   .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+//   .get(cors.corsWithOptions, (req, res, next) => {
+//     if (req.get('Authorization')) {
+//       res.removeHeader('Authorization');
+//       res.send("Logout successful")
+//     }
+//     //   if (req.session) {
+//     //     req.session.destroy();
+//     //     res.clearCookie('session-id');
+//     //     res.redirect('/');
+//     else {
+//       var err = new Error('You are not logged in!');
+//       err.status = 403;
+//       next(err);
+//     }
+//   }).delete(cors.cors, (req, res) => {
+//     res.status(405);
+//     res.end("Only GET operation supported on /users/logout");
+//   }).post(cors.cors, (req, res) => {
+//     res.status(405);
+//     res.end("Only GET operation supported on /users/logout");
+//   }).put(cors.cors, (req, res) => {
+//     res.status(405);
+//     res.end("Only GET operation supported on /users/logout");
+//   });
 
 module.exports = router;

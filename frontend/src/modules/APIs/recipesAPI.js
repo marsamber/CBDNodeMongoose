@@ -9,6 +9,13 @@ const recipesAPI = {
             }).catch((err) => console.log(err));
     },
 
+    async getRecipesSearched(toSearch) {
+        return await fetch(`http://${HOST}:5000/api/recipes?search=${toSearch}`)
+            .then((res) => {
+                return res.json();
+            }).catch((err) => console.log(err));
+    },
+
     async getRecipeById(recipeId) {
         return await fetch(`http://${HOST}:5000/api/recipes/${recipeId}`)
             .then((res) => {

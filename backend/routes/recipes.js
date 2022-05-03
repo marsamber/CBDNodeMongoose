@@ -6,6 +6,7 @@ const Fs = require("fs");
 const { parse } = require("csv-parse");
 const authenticate = require("../authenticate");
 const cors = require('./cors');
+const url = require('url');
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -38,10 +39,14 @@ router.post("/import", async (req, res) => {
     });
 });
 
-router.route("/")
+  router.route("/")
   .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
   .get(cors.cors, async (req, res) => {
-    const recipes = await Recipe.find();
+    const queries = url.parse(req.url,true).query
+    const toSearch = queries.search;
+    var recipes;
+    if(toSearch === undefined) recipes = await Recipe.find();
+    else recipes = await Recipe.find({ $or:[{"title": { "$regex": toSearch, "$options": "i" } }, {"ingredients": { "$regex": toSearch, "$options": "i" } } ]});
     res.send(recipes);
   }).delete(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
     await Recipe.deleteMany();

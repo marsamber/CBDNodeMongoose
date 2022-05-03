@@ -5,9 +5,65 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url('background.jpg');
+  backdrop-filter: blur(10px);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.navbar{
+  background-color: #FBF5E6;
+}
+
+.signForm{
+  /* width: 70%; */
+  margin: auto; 
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.form-label{
+  color: white;
+}
+
+.buttonNavbar{
+  background-color: transparent;
+  border: none;
+}
+
+#cardTitle{
+  font-family: 'Square Peg', cursive;
+  /* font-weight: bold; */
+  font-size: 150%;
+}
+
+#btnPag {
+  background-color:#FBF5E6;
+  color:black;
+  border:none;
+}
+
+#btnPag:hover, #btnPag:active{
+  background-color:#F6DCA9;
+}
+
+#btnPagAct {
+  background-color:#F6DCA9;
+  color:black;
+  border:none;
+}
+
+#btnPagAct:hover, #btnPagAct:active{
+  background-color:#FBF5E6;
+}
+
+.alertDiv{
+  width: 50%;
+  margin: auto;
 }
