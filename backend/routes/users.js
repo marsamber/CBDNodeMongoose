@@ -40,7 +40,33 @@ router.route('/:id')
     res.status(404);
     res.send({ error: "User doesn't exist!" });
   }
-})
+}).get(cors.cors, async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.params.id })
+    .populate({
+      path: "recipes"
+    });
+    res.send(user);
+  } catch {
+    res.status(404);
+    res.send({ error: "User doesn't exist!" });
+  }
+});
+
+router.route('/username/:username')
+.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+.get(cors.cors, async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username })
+    .populate({
+      path: "recipes"
+    });
+    res.send(user);
+  } catch {
+    res.status(404);
+    res.send({ error: "User doesn't exist!" });
+  }
+});
 
 router.route('/signup')
   .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
