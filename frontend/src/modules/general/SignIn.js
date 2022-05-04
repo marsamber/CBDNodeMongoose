@@ -11,7 +11,7 @@ const SignIn = () => {
     });
 
     const handleSubmit = async (event) => {
-        await usersAPI.signIn(user);
+        const res = await usersAPI.signIn(user);
         event.preventDefault();
     }
 
