@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import usersAPI from "../APIs/usersAPI";
+import '../../index.css'
 
 const SignUp = () => {
 
@@ -18,6 +19,7 @@ const SignUp = () => {
     }
 
     return <Form className="signForm" onSubmit={handleSubmit}>
+        <h1 className="title text-center">Sign Up</h1>
         <Form.Group className="mb-3" controlId="formBasicFirstname">
             <Form.Label>Firstname</Form.Label>
             <Form.Control type="text" placeholder="Enter Firstname" onChange={(e) => setUser({ ...user, firstname: e.target.value })} />
@@ -42,6 +44,11 @@ const SignUp = () => {
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" placeholder="Password" onChange={(e) => setUser({ ...user, password: e.target.value })} required={true} />
         </Form.Group>
+
+        <Form.Text id="textHelp" className="mb-3">
+            If the username already exists, the system will try to log in with the given user.
+        </Form.Text>
+
         <Button id="btnPag" type="submit">
             Submit
         </Button>

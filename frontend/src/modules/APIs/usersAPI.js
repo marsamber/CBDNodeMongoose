@@ -2,7 +2,6 @@ import authenticated from "../general/authenticated";
 import HOST from "./host"
 
 const usersAPI = {
-
     signIn(user) {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -28,7 +27,7 @@ const usersAPI = {
                 window.location.href = "/";
             })
             .then(result => console.log(result))
-            .catch(error => console.log('error', error));
+            .catch(error => alert("Incorrect username or password"));
     },
     signUp(user) {
         const requestOptions = {
@@ -39,7 +38,7 @@ const usersAPI = {
         fetch(`http://${HOST}:5000/users/signup`, requestOptions)
             .then(async (res) => {
                 await this.signIn(user);
-            }).catch((err) => console.log(err));
+            }).catch((err) => alert(err));
     },
     async getUserByUsername(username) {
         return await fetch(`http://${HOST}:5000/users/username/${username}`)
