@@ -16,7 +16,7 @@ const toBuyRouter = require("./routes/toBuy");
 const cookedRouter = require('./routes/cooked');
 const favouriteRouter = require('./routes/favourite');
 
-mongoose.connect("mongodb+srv://root:root@cluster0.7adsn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", { useNewUrlParser: true }).then(() => {
+mongoose.connect(" mongodb+srv://root:root@cluster0.7adsn.mongodb.net/cbdBD", { useNewUrlParser: true }).then(() => {
   const app = express();
   app.use(logger("dev"));
   app.use(express.json());
