@@ -11,11 +11,12 @@ const SignIn = () => {
     });
 
     const handleSubmit = async (event) => {
-        await usersAPI.signIn(user);
+        const res = await usersAPI.signIn(user);
         event.preventDefault();
     }
 
     return (<Form className="signForm" onSubmit={handleSubmit}>
+        <h1 className="title text-center">Sign In</h1>
         <Form.Group className="mb-3" controlId="formBasicUsername">
             <Form.Label>Username</Form.Label>
             <Form.Control type="text" placeholder="Enter username" onChange={(e) => setUser({ ...user, username: e.target.value })} />
