@@ -27,7 +27,7 @@ const Cooked = () => {
     return <><MenuProfile />
         <br/>
         <h1 className="title text-center">Cooked</h1>
-        <RecipesList recipes={recipes} items={items} val="like" /></>
+        <RecipesList recipes={recipes} items={items} val="Like" /></>
 }
 
 export default Cooked;

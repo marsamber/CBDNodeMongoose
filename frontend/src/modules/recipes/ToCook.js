@@ -27,7 +27,7 @@ const ToCook = () => {
     return <><MenuProfile />
         <br/>
         <h1 className="title text-center">To Cook</h1>
-        <RecipesList recipes={recipes} items={items} val="priority" /></>
+        <RecipesList recipes={recipes} items={items} val="Priority" /></>
 }
 
 export default ToCook;
