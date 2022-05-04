@@ -20,7 +20,7 @@ const PrincipalNavbar = () => {
                     <Nav className="me-auto">
                         <Nav.Link href="/recipes?page=1">Recipes</Nav.Link>
                         <NavDropdown title={username} id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#profile">&nbsp;Profile</NavDropdown.Item>
+                            <NavDropdown.Item href="/myRecipes">&nbsp;Profile</NavDropdown.Item>
                             <NavDropdown.Item ><button className='buttonNavbar' onClick={() => edit()}>Edit</button></NavDropdown.Item>
                             <NavDropdown.Item ><button className='buttonNavbar' onClick={() => logout()}>Logout</button></NavDropdown.Item>
                         </NavDropdown>

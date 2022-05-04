@@ -41,6 +41,19 @@ code {
   font-family: 'Square Peg', cursive;
   /* font-weight: bold; */
   font-size: 150%;
+  max-height: 3rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#cardText{
+  display: -webkit-box;
+  max-height: 10rem;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 #btnPag {
@@ -66,4 +79,26 @@ code {
 .alertDiv{
   width: 50%;
   margin: auto;
+}
+
+#badgeProfile{
+  font-size: 100%;
+  background-color:#F6DCA9;
+}
+
+#badgeProfile:hover{
+  font-size: 100%;
+  background-color:#FBF5E6;
+}
+
+#badgeProfile>a{
+  color:black;
+  text-decoration: none;
+}
+
+.title{
+  /* font-size: 250%; */
+  font-family: 'Square Peg', cursive;
+  font-weight: bold;
+  color:white;
 }

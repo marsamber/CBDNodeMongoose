@@ -4,7 +4,7 @@ import RecipesList from "./RecipesList";
 
 const Recipes = () =>{
     
-    const [recipes, setRecipes] = useState(null);
+    const [recipes, setRecipes] = useState([]);
     useEffect(() => {
         recipesAPI.getAllRecipes().then((recipes) => {
             setRecipes(recipes);

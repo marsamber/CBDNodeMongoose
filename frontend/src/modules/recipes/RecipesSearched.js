@@ -5,7 +5,7 @@ import RecipesList from "./RecipesList";
 
 const RecipesSearched = () => {
 
-    const [recipes, setRecipes] = useState(null);
+    const [recipes, setRecipes] = useState([]);
     const params = useParams();
     const toSearch = params.toSearch;
 

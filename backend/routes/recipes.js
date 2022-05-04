@@ -7,6 +7,7 @@ const { parse } = require("csv-parse");
 const authenticate = require("../authenticate");
 const cors = require('./cors');
 const url = require('url');
+const User = require("../models/User");
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -61,6 +62,7 @@ router.post("/import", async (req, res) => {
       res.status(400);
       res.end("You must give a title for your recipe!");
     } else {
+      const user = await User.findOne({_id:req.user._id});
       const recipe = new Recipe({
         title: req.body.title,
         instructions: req.body.instructions,
@@ -68,6 +70,8 @@ router.post("/import", async (req, res) => {
         ingredients: req.body.ingredients,
       });
       await recipe.save();
+      user.recipes.push(recipe);
+      await user.save();
       res.status(201);
       res.send(recipe);
     }
