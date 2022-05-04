@@ -1,3 +1,4 @@
+import authenticated from "../general/authenticated";
 import HOST from "./host"
 
 const usersAPI = {
@@ -22,8 +23,8 @@ const usersAPI = {
             .then(async response => {
                 const res = await response.json();
                 console.log(res);
-                localStorage.setItem("token", res.token);
-                localStorage.setItem("username", user.username);
+                authenticated.setStorage("token", res.token, 3600);
+                authenticated.setStorage("username", user.username, 3600);
                 window.location.href = "/";
             })
             .then(result => console.log(result))

@@ -1,3 +1,4 @@
+import authenticated from "../general/authenticated";
 import HOST from "./host"
 
 const cookedAPI = {
@@ -5,7 +6,7 @@ const cookedAPI = {
     async getAllCooked() {
         const requestOptions = {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem("token")}` },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authenticated.getStorage("token")}` },
         }
         return await fetch(`http://${HOST}:5000/api/cooked`, requestOptions)
             .then((res) => {

@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 import usersAPI from "../APIs/usersAPI";
 import MenuProfile from "../general/MenuProfile";
 import RecipesList from "./RecipesList";
-import isLogged from '../general/authenticated';
 import '../../index.css';
 import { Button, Container } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import authenticated from "../general/authenticated";
 
 const MyRecipes = () => {
-    if (!isLogged()) window.location.href = '/';
+    if (!authenticated.isLogged()) window.location.href = '/';
 
     const [recipes, setRecipes] = useState([]);
     useEffect(() => {
-        const username = localStorage.getItem("username");
+        const username = authenticated.getStorage("username");
         usersAPI.getUserByUsername(username).then((user) => {
             setRecipes(user.recipes);
         }).catch((err) => console.log(err));

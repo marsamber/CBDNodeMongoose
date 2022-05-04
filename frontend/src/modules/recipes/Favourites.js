@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import MenuProfile from "../general/MenuProfile";
 import RecipesList from "./RecipesList";
-import isLogged from '../general/authenticated';
+import authenticated from '../general/authenticated';
 import '../../index.css';
 import favouriteAPI from "../APIs/favouriteAPI";
 
 const Favourites = () => {
-    if (!isLogged()) window.location.href = '/';
+    if (!authenticated.isLogged()) window.location.href = '/';
 
     const [recipes, setRecipes] = useState([]);
     useEffect(() => {

@@ -1,8 +1,8 @@
 import { Container } from "react-bootstrap";
-import isLogged from './authenticated';
+import authenticated from './authenticated';
 
 const MenuProfile = () => {
-    if (!isLogged()) window.location.href = '/';
+    if (!authenticated.isLogged()) window.location.href = '/';
 
     return <Container>
         <br />
