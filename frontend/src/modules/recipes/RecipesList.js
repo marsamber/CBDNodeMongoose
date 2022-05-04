@@ -1,11 +1,8 @@
-import { useState } from "react";
-import { Alert, Button, Container, FormControl, InputGroup, Row } from "react-bootstrap";
+import { Alert, Button, Container,  Row } from "react-bootstrap";
 import '../../index.css'
 import RecipeItem from "./RecipeItem";
 
 const RecipesList = (props) => {
-
-    const [toSearch, setToSearch] = useState("");
 
     const urlParams = new URLSearchParams(window.location.search);
     const pageStr = urlParams.get('page');
@@ -31,13 +28,6 @@ const RecipesList = (props) => {
     numRow = Math.round(numRow) + 1;
     let i = -1;
     return <Container>
-        <br/>
-        <InputGroup className="mt-3">
-            <FormControl placeholder="Search by name or ingredient" onChange={(e) => setToSearch(e.target.value)} />
-            <Button id='btnPag' onClick={() => window.location.href = `/recipes/search/${toSearch}?page=1`}>
-                Search
-            </Button>
-        </InputGroup>
         {recipes.length === 0 ? <><br /><Alert className="text-center alertDiv" variant='warning'>
             No recipes found!
         </Alert></> : <></>}
