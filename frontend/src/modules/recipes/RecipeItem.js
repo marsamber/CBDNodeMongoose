@@ -1,18 +1,30 @@
-import { Button, Card, Col } from "react-bootstrap";
+import { Badge, Card, Col } from "react-bootstrap";
 import '../../index.css'
 
-const RecipeItem = (props) =>{
-    var img = props.recipe.image === "#NAME?" ? "example" : props.recipe.image;
-    return <Col md={{span:3}} className="mt-3"><Card >
-    <Card.Img variant="top" src={'/images/'+img+'.jpg'} />
+const RecipeItem = (props) => {
+  var img = props.recipe.image === "#NAME?" ? "examplee" : props.recipe.image;
+  var itemVal = null;
+  var color = null;
+  if (props.val === "Like") {
+    itemVal = props.item.like;
+    if (itemVal === "LIKE") color = "success";
+    else if (itemVal === "DISLIKE") color = "danger";
+  } else if (props.val === "Priority") {
+    itemVal = props.item.priority;
+    if (itemVal === "HIGH") color = "success";
+    else if (itemVal === "MEDIUM") color = "warning"
+    else if (itemVal === "LOW") color = "danger"
+  }
+  return <Col md={{ span: 3 }} id="aItem" className="mt-3"><a id="aItem" href={'/recipe/' + props.recipe._id}><Card style={{ cursor: "pointer" }}>
+    <Card.Img variant="top" src={'/images/' + img + '.jpg'} />
     <Card.Body>
       <Card.Title id="cardTitle">{props.recipe.title}</Card.Title>
-      <Card.Text>
-        {props.recipe.instructions.substring(0,100)}...
+      <Card.Text id="cardText">
+        {props.recipe.instructions}
       </Card.Text>
-      <Button id="btnPag" href={'/recipe/'+props.recipe._id}>I want to cook it!</Button>
+      {itemVal !== null ? <><span>{props.val}</span>: <Badge bg={color}>{itemVal}</Badge></> : <></>}
     </Card.Body>
-  </Card></Col>
+  </Card></a></Col>
 }
 
 export default RecipeItem;

@@ -1,41 +1,41 @@
-import { useState } from "react";
-import { Alert, Button, Container, FormControl, InputGroup, Row } from "react-bootstrap";
+import { Alert, Button, Container,  Row } from "react-bootstrap";
 import '../../index.css'
 import RecipeItem from "./RecipeItem";
 
 const RecipesList = (props) => {
 
-    const [toSearch, setToSearch] = useState("");
-
     const urlParams = new URLSearchParams(window.location.search);
     const pageStr = urlParams.get('page');
-    const page = pageStr === undefined ? 1 : parseInt(pageStr);
+    const page = pageStr === null ? 1 : parseInt(pageStr);
 
     if (!props.recipes) return <>Loading...</>
 
-    let totalCountPage = 40;
+    let totalCountPage = 20;
     var recipes = props.recipes;
-    let numPages = Math.ceil(recipes.length / 40);
+    let numPages = Math.ceil(recipes.length / totalCountPage);
+
+    var items;
+    if (props.items) {
+        items = props.items;
+        items.sort((a, b) => (a.recipe.title > b.recipe.title) ? 1 : ((b.recipe.title > a.recipe.title) ? -1 : 0))
+        items = items.slice(page * totalCountPage - totalCountPage, totalCountPage * page);
+    }
 
     recipes.sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0))
-    recipes = recipes.slice(page * totalCountPage - 40, totalCountPage * page);
+    recipes = recipes.slice(page * totalCountPage - totalCountPage, totalCountPage * page);
 
     let numRow = recipes.length / 4;
     numRow = Math.round(numRow) + 1;
     let i = -1;
     return <Container>
-        <InputGroup className="mt-3">
-            <FormControl placeholder="Search by name or ingredient" onChange={(e) => setToSearch(e.target.value)} />
-            <Button id='btnPag' onClick={() => window.location.href = `/recipes/search/${toSearch}?page=1`}>
-                Search
-            </Button>
-        </InputGroup>
         {recipes.length === 0 ? <><br /><Alert className="text-center alertDiv" variant='warning'>
             No recipes found!
         </Alert></> : <></>}
         {[...Array(numRow)].map((e, ind) => {
             return <Row key={ind} className="align-items-center">{[...Array(4)].map((el) => {
                 i++;
+                if (i < recipes.length && props.val && items)
+                    return <RecipeItem recipe={recipes[i]} key={recipes[i]._id} item={items[i]} val={props.val} />
                 if (i < recipes.length)
                     return <RecipeItem recipe={recipes[i]} key={recipes[i]._id} />
                 return <></>

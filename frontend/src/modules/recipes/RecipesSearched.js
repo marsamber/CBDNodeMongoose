@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import recipesAPI from "../APIs/recipesAPI";
 import RecipesList from "./RecipesList";
+import SearchRecipes from "./SearchRecipes";
 
 const RecipesSearched = () => {
 
-    const [recipes, setRecipes] = useState(null);
+    const [recipes, setRecipes] = useState([]);
     const params = useParams();
     const toSearch = params.toSearch;
 
@@ -15,7 +17,11 @@ const RecipesSearched = () => {
         }).catch((err) => console.log(err));
     }, [toSearch])
 
-    return <RecipesList recipes={recipes} />
+    return (<>
+        <br />
+        <Container><SearchRecipes /></Container>
+        <RecipesList recipes={recipes} />
+    </>)
 }
 
 export default RecipesSearched;

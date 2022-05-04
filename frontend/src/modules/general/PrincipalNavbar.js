@@ -1,14 +1,15 @@
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import banner from '../../banner.png';
 import '../../index.css'
+import authenticated from "./authenticated";
 
 const PrincipalNavbar = () => {
-    const token = localStorage.getItem("token")
-    const username = localStorage.getItem("username")
-    const edit = () =>{}
+    const token = authenticated.getStorage("token")
+    const username = authenticated.getStorage("username")
+    const edit = () => { }
     const logout = async () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("username");
+        authenticated.removeStorage("token")
+        authenticated.removeStorage("username")
         window.location.href = "/";
     }
     if (token) {
@@ -20,9 +21,9 @@ const PrincipalNavbar = () => {
                     <Nav className="me-auto">
                         <Nav.Link href="/recipes?page=1">Recipes</Nav.Link>
                         <NavDropdown title={username} id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#profile">&nbsp;Profile</NavDropdown.Item>
-                            <NavDropdown.Item ><button className='buttonNavbar' onClick={() => edit()}>Edit</button></NavDropdown.Item>
-                            <NavDropdown.Item ><button className='buttonNavbar' onClick={() => logout()}>Logout</button></NavDropdown.Item>
+                            <NavDropdown.Item href="/myRecipes" id='buttonNavbar'>&nbsp;Profile</NavDropdown.Item>
+                            <NavDropdown.Item id='buttonNavbar'><button onClick={() => edit()}>Edit</button></NavDropdown.Item>
+                            <NavDropdown.Item id='buttonNavbar'><button onClick={() => logout()}>Logout</button></NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
