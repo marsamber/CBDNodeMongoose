@@ -6,6 +6,8 @@ const authenticate = require("./authenticate");
 const logger = require("morgan");
 const config = require("./config");
 
+require('dotenv').config({path: 'variables.env'})
+
 const usersRouter = require("./routes/users");
 const recipesRouter = require("./routes/recipes");
 const commentsRouter = require("./routes/comments");
@@ -14,7 +16,7 @@ const toBuyRouter = require("./routes/toBuy");
 const cookedRouter = require('./routes/cooked');
 const favouriteRouter = require('./routes/favourite');
 
-mongoose.connect(config.mongoUrl, { useNewUrlParser: true }).then(() => {
+mongoose.connect("mongodb+srv://root:root@cluster0.7adsn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", { useNewUrlParser: true }).then(() => {
   const app = express();
   app.use(logger("dev"));
   app.use(express.json());
@@ -27,7 +29,11 @@ mongoose.connect(config.mongoUrl, { useNewUrlParser: true }).then(() => {
   app.use("/api/cooked", cookedRouter);
   app.use("/api/favourite", favouriteRouter);
 
-  app.listen(5000, () => {
+  // Leer localhost de variables y puerto
+  const host = process.env.HOST || '0.0.0.0';
+  const port = process.env.PORT || 5000;
+
+  app.listen(port, host, () => {
     console.log("Server has started!");
   });
 
