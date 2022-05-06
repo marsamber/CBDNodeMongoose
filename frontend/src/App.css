@@ -14,14 +14,19 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #FBF5E6;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: black;
+  font-family: 'Square Peg', cursive;
+}
+
+.msgWelcome{
+  font-size: 200%;
 }
 
 .App-link {
@@ -35,4 +40,14 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.link{
+  color: #916747;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.link:hover{
+  color:#F4CE86;
 }

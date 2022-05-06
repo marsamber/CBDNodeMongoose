@@ -4,8 +4,6 @@ import { useParams } from 'react-router-dom';
 import "./recipe.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import recipesAPI from '../APIs/recipesAPI';
-import getImg from '../images/getImages'
-import img from './ex.jpg'
 // import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -17,7 +15,7 @@ function Recipe() {
     useEffect(() => {
         recipesAPI.getRecipeById(recipeId)
             .then((recipe) => setRecipe(recipe));
-    }, [recipe]);
+    }, [recipeId]);
 
     function comment(event) {
         event.preventDefault();
@@ -53,8 +51,7 @@ function Recipe() {
         <Row>
             <Col>
                 <Row>
-                    {/* <img src={img} /> */}
-                    <img src={getImg(recipe.image)} alt={recipe.image}/>
+                    <img src={'/images/'+recipe.image+'.jpg'} alt={recipe.image}/>
                 </Row>
                 <Row>
                     <Col>

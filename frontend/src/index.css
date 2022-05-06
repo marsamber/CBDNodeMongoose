@@ -5,9 +5,125 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url('background.jpg');
+  backdrop-filter: blur(10px);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.navbar{
+  background-color: #FBF5E6;
+}
+
+.signForm{
+  /* width: 70%; */
+  margin: auto; 
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.form-label{
+  color: white;
+}
+
+#buttonNavbar:active{
+  color:black;
+}
+
+#buttonNavbar:hover{
+  background-color: #e9ecef;
+}
+
+#buttonNavbar > button{
+  border:none;
+  background-color: transparent;
+}
+
+#cardTitle{
+  font-family: 'Square Peg', cursive;
+  /* text-decoration: none;
+  color:black; */
+  font-size: 150%;
+  max-height: 3rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#cardText{
+  /* text-decoration: none;
+  color:black; */
+  display: -webkit-box;
+  max-height: 10rem;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#aItem{
+  text-decoration: none;
+  color:black;
+  transition: transform .2s;
+}
+
+#aItem:hover{
+  transform: scale(1.1);
+}
+
+#btnPag {
+  background-color:#FBF5E6;
+  color:black;
+  border:none;
+}
+
+#btnPag:hover, #btnPag:active{
+  background-color:#F6DCA9;
+}
+
+#btnPagAct {
+  background-color:#F6DCA9;
+  color:black;
+  border:none;
+}
+
+#btnPagAct:hover, #btnPagAct:active{
+  background-color:#FBF5E6;
+}
+
+.alertDiv{
+  width: 50%;
+  margin: auto;
+}
+
+#badgeProfile{
+  font-size: 100%;
+  background-color:#F6DCA9;
+}
+
+#badgeProfile:hover{
+  font-size: 100%;
+  background-color:#FBF5E6;
+}
+
+#badgeProfile>a{
+  color:black;
+  text-decoration: none;
+}
+
+.title{
+  /* font-size: 250%; */
+  font-family: 'Square Peg', cursive;
+  font-weight: bold;
+  color:white;
+}
+
+#textHelp{
+  color:white;
 }

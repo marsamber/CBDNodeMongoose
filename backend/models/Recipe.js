@@ -18,7 +18,8 @@ const recipeSchema = new Schema({
 		default: ''
 	},
 	image: {
-		type: String
+		type: String,
+		default: '#NAME?'
 	}
 }, {
     timestamps: true
