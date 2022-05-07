@@ -4,3 +4,15 @@
 .centertext{
     text-align: center;
 }
+
+.bordeimagen{
+    border: 10px solid white;
+    padding: 0 !important;
+    border-radius: 50px;
+}
+
+.title{
+    font-family: 'Square Peg', cursive;
+    font-weight: bold;
+    color:white;
+  }
