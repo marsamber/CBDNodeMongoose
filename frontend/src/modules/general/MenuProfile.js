@@ -10,7 +10,8 @@ const MenuProfile = () => {
             <badge className="badge" id="badgeProfile"><a href="/myRecipes">My Recipes</a></badge>&nbsp;
             <badge className="badge" id="badgeProfile"><a href="/favourites">Favourites</a></badge>&nbsp;
             <badge className="badge" id="badgeProfile"><a href="/cooked">Cooked</a></badge>&nbsp;
-            <badge className="badge" id="badgeProfile"><a href="/toCook">To Cook</a></badge>
+            <badge className="badge" id="badgeProfile"><a href="/toCook">To Cook</a></badge>&nbsp;
+            <badge className="badge" id="badgeProfile"><a href="/toBuy">To Buy</a></badge>
         </div>
     </Container>
 }
