@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import usersAPI from "../APIs/usersAPI";
 import MenuProfile from "../general/MenuProfile";
 import RecipesList from "./RecipesList";
 import '../../index.css';
@@ -14,10 +13,8 @@ const MyRecipes = () => {
 
     const [recipes, setRecipes] = useState([]);
     useEffect(() => {
-        const username = authenticated.getStorage("username");
-        usersAPI.getUserByUsername(username).then((user) => {
-            setRecipes(user.recipes);
-        }).catch((err) => console.log(err));
+        const user = authenticated.getStorage("user");
+        setRecipes(JSON.parse(user).recipes);
     }, [recipes])
 
     const deleteMyRecipe = async(id) => {

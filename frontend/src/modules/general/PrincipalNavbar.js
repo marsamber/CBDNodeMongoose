@@ -5,10 +5,10 @@ import authenticated from "./authenticated";
 
 const PrincipalNavbar = () => {
     const token = authenticated.getStorage("token")
-    const username = authenticated.getStorage("username")
+    const user = authenticated.getStorage("user");
     const logout = async () => {
         authenticated.removeStorage("token")
-        authenticated.removeStorage("username")
+        authenticated.removeStorage("user")
         window.location.href = "/";
     }
     if (token) {
@@ -19,7 +19,7 @@ const PrincipalNavbar = () => {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link href="/recipes?page=1">Recipes</Nav.Link>
-                        <NavDropdown title={username} id="basic-nav-dropdown">
+                        <NavDropdown title={JSON.parse(user).username} id="basic-nav-dropdown">
                             <NavDropdown.Item href="/myRecipes" id='buttonNavbar'>&nbsp;Profile</NavDropdown.Item>
                             <NavDropdown.Item id='buttonNavbar'><button onClick={() => logout()}>Logout</button></NavDropdown.Item>
                         </NavDropdown>
