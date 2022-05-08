@@ -1,13 +1,13 @@
-import HOST from "./host";
-import authenticated from "../general/authenticated";
+import HOST from './host';
+import authenticated from '../general/authenticated';
 
 const favouriteAPI = {
   async getAllFavourites() {
     const requestOptions = {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authenticated.getStorage("token")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authenticated.getStorage('token')}`,
       },
     };
     return await fetch(`http://${HOST}:5000/api/favourite`, requestOptions)
@@ -17,17 +17,17 @@ const favouriteAPI = {
       .catch((err) => console.log(err));
   },
 
-  async addFavourite(recipeId, c) {
+  async addFavourite(recipeId) {
     const requestOptions = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authenticated.getStorage("token")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authenticated.getStorage('token')}`,
       },
     };
 
     return await fetch(
-      `http://localhost:5000/api/favourite/recipes/${recipeId}`,
+      `http://${HOST}:5000/api/favourite/recipes/${recipeId}`,
       requestOptions
     )
       .then((res) => {
@@ -35,21 +35,36 @@ const favouriteAPI = {
       })
       .catch((err) => console.log(err));
   },
+
   async deleteFavourite(favouriteId) {
     const requestOptions = {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authenticated.getStorage("token")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authenticated.getStorage('token')}`,
       },
     };
-
     return await fetch(
-      `http://localhost:5000/api/favourite/${favouriteId}`,
+      `http://${HOST}:5000/api/favourite/${favouriteId}`,
       requestOptions
     )
       .then((res) => {
-        return res.json();
+        return res;
+      })
+      .catch((err) => console.log(err));
+  },
+
+  async deleteAllFavourite() {
+    const requestOptions = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authenticated.getStorage('token')}`,
+      },
+    };
+    return await fetch(`http://${HOST}:5000/api/favourite`, requestOptions)
+      .then((res) => {
+        return res;
       })
       .catch((err) => console.log(err));
   },

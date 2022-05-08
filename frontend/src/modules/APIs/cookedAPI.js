@@ -1,13 +1,13 @@
-import authenticated from "../general/authenticated";
-import HOST from "./host";
+import authenticated from '../general/authenticated';
+import HOST from './host';
 
 const cookedAPI = {
   async getAllCooked() {
     const requestOptions = {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authenticated.getStorage("token")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authenticated.getStorage('token')}`,
       },
     };
     return await fetch(`http://${HOST}:5000/api/cooked`, requestOptions)
@@ -17,18 +17,18 @@ const cookedAPI = {
       .catch((err) => console.log(err));
   },
 
-  async addCooked(recipeId, c) {
+  async addCooked(recipeId, like) {
     const requestOptions = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authenticated.getStorage("token")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authenticated.getStorage('token')}`,
       },
-      body: JSON.stringify(c),
+      body: JSON.stringify(like),
     };
 
     return await fetch(
-      `http://localhost:5000/api/cooked/recipes/${recipeId}`,
+      `http://${HOST}:5000/api/cooked/recipes/${recipeId}`,
       requestOptions
     )
       .then((res) => {
@@ -36,21 +36,36 @@ const cookedAPI = {
       })
       .catch((err) => console.log(err));
   },
-  async deleteCooked(cookedId) {
+
+  async deleteAllCooked() {
     const requestOptions = {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authenticated.getStorage("token")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authenticated.getStorage('token')}`,
       },
     };
+    return await fetch(`http://${HOST}:5000/api/cooked`, requestOptions)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => console.log(err));
+  },
 
+  async deleteCooked(cookedId) {
+    const requestOptions = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authenticated.getStorage('token')}`,
+      },
+    };
     return await fetch(
-      `http://localhost:5000/api/cooked/${cookedId}`,
+      `http://${HOST}:5000/api/cooked/${cookedId}`,
       requestOptions
     )
       .then((res) => {
-        return res.json();
+        return res;
       })
       .catch((err) => console.log(err));
   },

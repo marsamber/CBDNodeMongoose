@@ -13,6 +13,7 @@ import MyRecipes from './modules/recipes/MyRecipes';
 import Favourites from './modules/recipes/Favourites';
 import Cooked from './modules/recipes/Cooked';
 import ToCook from './modules/recipes/ToCook';
+import Populate from './modules/general/Populate';
 import ToBuy from './modules/recipes/ToBuy';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -23,6 +24,7 @@ root.render(
       <Route path='/' element={<App />} />
       <Route path="/signIn" element={<SignIn />} />
       <Route path="/signUp" element={<SignUp />} />
+      <Route path="/populate" element={<Populate />} />
       <Route path="/recipes" element={<AllRecipes />} />
       <Route path="/recipes/search/:toSearch" element={<RecipesSearched />}/>
       <Route path='/recipe/:id' element={<Recipe />} />

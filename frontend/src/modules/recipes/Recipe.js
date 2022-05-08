@@ -188,7 +188,7 @@ function Recipe() {
           <Col>
             <img
               class="bordeimagen"
-              src={recipe.image.includes(".") ? recipe.image:(`/images/${recipe.image}.jpg`)}
+              src={recipe.image.includes(".") ? recipe.image:(recipe.image === "#NAME?" ? (`/images/examplee.jpg`):(`/images/${recipe.image}.jpg`))}
               alt={recipe.image}
               style={{ width: "100%" }}
             />

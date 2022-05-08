@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
+const ToBuy = require('./ToBuy');
 
 const userSchema = new Schema({
     firstname: {
@@ -21,6 +22,14 @@ const userSchema = new Schema({
     }]
 }, {
     timestamps: true
+});
+
+userSchema.pre('remove', function(next) {
+    ToBuy.remove({user: this._id});
+    Favourite.remove({user: this._id});
+    ToCook.remove({user: this._id});
+    Cooked.remove({user: this._id});
+    next();
 });
 
 userSchema.plugin(passportLocalMongoose);

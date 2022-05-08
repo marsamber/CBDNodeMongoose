@@ -64,7 +64,7 @@ const RecipesList = (props) => {
         {[...Array(numRow)].map((e, ind) => {
             return <Row key={ind} className="align-items-center">{[...Array(4)].map((el) => {
                 i++;
-                if (props.items && i < items.length && props.delete){
+                if (props.items && i < items.length && props.delete && !props.val){
                     return <RecipeItem recipe={items[i].recipe} key={items[i].recipe._id} item={items[i]} delete={props.delete}/>
                 }
                 if (props.items && i < items.length && props.val){

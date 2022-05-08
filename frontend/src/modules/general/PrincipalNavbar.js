@@ -36,6 +36,7 @@ const PrincipalNavbar = () => {
                     <Nav className="me-auto">
                         <Nav.Link href="/signIn">Sign In</Nav.Link>
                         <Nav.Link href="/signUp"><strong>Sign Up</strong></Nav.Link>
+                        <Nav.Link href="/populate"><strong>Populate DB</strong></Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
