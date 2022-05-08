@@ -7,6 +7,7 @@ import { Button, Container } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import authenticated from "../general/authenticated";
+import recipesAPI from "../APIs/recipesAPI";
 
 const MyRecipes = () => {
     if (!authenticated.isLogged()) window.location.href = '/';
@@ -17,13 +18,17 @@ const MyRecipes = () => {
         usersAPI.getUserByUsername(username).then((user) => {
             setRecipes(user.recipes);
         }).catch((err) => console.log(err));
-    }, [])
+    }, [recipes])
+
+    const deleteMyRecipe = async(id) => {
+        await recipesAPI.deleteRecipe(id);
+    }
 
     return <><MenuProfile />
         <br />
         <h1 className="title text-center">My Recipes</h1>
         <Container><Button id='btnPag' style={{ float: "right" }}><FontAwesomeIcon icon={faPlus} /> Recipe</Button></Container>
-        <RecipesList recipes={recipes} /></>
+        <RecipesList recipes={recipes} delete = {deleteMyRecipe} /></>
 }
 
 export default MyRecipes;

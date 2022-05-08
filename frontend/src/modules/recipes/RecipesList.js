@@ -43,6 +43,14 @@ const RecipesList = (props) => {
         items = items.slice(page * totalCountPage - totalCountPage, totalCountPage * page);
 
         numRow = Math.ceil(items.length / 4);
+    } else if (props.items && !props.val) {
+        items = props.items;
+        numPages = Math.ceil(items.length / totalCountPage);
+
+        items.sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0))
+        items = items.slice(page * totalCountPage - totalCountPage, totalCountPage * page);
+
+        numRow = Math.ceil(items.length / 4);
     }
 
     let i = -1;
@@ -56,10 +64,19 @@ const RecipesList = (props) => {
         {[...Array(numRow)].map((e, ind) => {
             return <Row key={ind} className="align-items-center">{[...Array(4)].map((el) => {
                 i++;
-                if (props.items && i < items.length && props.val)
+                if (props.items && i < items.length && props.delete){
+                    return <RecipeItem recipe={items[i].recipe} key={items[i].recipe._id} item={items[i]} delete={props.delete}/>
+                }
+                if (props.items && i < items.length && props.val){
+                    if(props.delete) 
+                        return <RecipeItem recipe={items[i].recipe} key={items[i].recipe._id} item={items[i]} val={props.val} delete={props.delete}/>
                     return <RecipeItem recipe={items[i].recipe} key={items[i].recipe._id} item={items[i]} val={props.val} />
-                if (props.recipes && i < recipes.length)
+                }
+                if (props.recipes && i < recipes.length){
+                    if(props.delete)
+                        return <RecipeItem recipe={recipes[i]} key={recipes[i]._id} delete = {props.delete} />
                     return <RecipeItem recipe={recipes[i]} key={recipes[i]._id} />
+                }
                 return <></>
             })}</Row>
         })}

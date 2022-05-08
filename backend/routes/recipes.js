@@ -95,7 +95,8 @@ router.route("/:id")
     }
   }).delete(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
     try {
-      await Recipe.deleteOne({ _id: req.params.id });
+      const recipe = await Recipe.findOne({ _id: req.params.id });
+      recipe.remove();
       res.status(204).send();
     } catch {
       res.status(404);

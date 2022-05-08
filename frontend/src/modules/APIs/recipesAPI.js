@@ -1,3 +1,4 @@
+import authenticated from "../general/authenticated";
 import HOST from "./host"
 
 const recipesAPI = {
@@ -33,6 +34,17 @@ const recipesAPI = {
         return await fetch(`http://localhost:5000/api/recipes/${recipeId}/comments`, requestOptions)
             .then((res) => {
                 return res.json();
+            }).catch((err) => console.log(err));
+    },
+
+    async deleteRecipe(recipeId) {
+        const requestOptions = {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authenticated.getStorage("token")}` },
+        }
+        return await fetch(`http://${HOST}:5000/api/recipes/${recipeId}`, requestOptions)
+            .then((res) => {
+                return res;
             }).catch((err) => console.log(err));
     },
 }

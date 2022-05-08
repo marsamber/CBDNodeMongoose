@@ -8,20 +8,13 @@ import toCookAPI from "../APIs/toCookAPI";
 const ToCook = () => {
     if (!authenticated.isLogged()) window.location.href = '/';
 
-    // const [recipes, setRecipes] = useState([]);
     const [items, setItems] = useState([]);
 
     useEffect(() => {
         toCookAPI.getAllToCook().then((toCook) => {
             setItems(toCook);
-            // var recipes=[];
-            // for (let i = 0; i < toCook.length; i++) {
-            //     const tc = toCook[i];
-            //     recipes.push(tc.recipe)
-            // }
-            // setRecipes(recipes);
         }).catch((err) => console.log(err));
-    }, [])
+    }, [items])
 
     const sortByPriority = (a,b) => {
         if (a.priority === "HIGH") {
@@ -45,11 +38,15 @@ const ToCook = () => {
         }
     }
 
+    const deleteToCook = async (id) => {
+        await toCookAPI.deleteToCook(id);
+    }
+
     if(!items) return <>Loading...</>
     return <><MenuProfile />
         <br/>
         <h1 className="title text-center">To Cook</h1>
-        <RecipesList items={items} sortByPriority={sortByPriority} val="Priority" /></>
+        <RecipesList items={items} sortByPriority={sortByPriority} val="Priority" delete = {deleteToCook} /></>
 }
 
 export default ToCook;
