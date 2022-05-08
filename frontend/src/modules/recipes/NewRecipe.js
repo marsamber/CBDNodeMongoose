@@ -14,6 +14,7 @@ const NewRecipe = (props) => {
   const [t, setT] = useState("");
   const [ins, setIns] = useState("");
   const [ing, setIng] = useState("");
+  const [img, setImg] = useState("");
 
   function enviar() {
     props.onHide();
@@ -21,6 +22,7 @@ const NewRecipe = (props) => {
       title: t,
       instructions: ins,
       ingredients: ing.split(","),
+      image: img
     };
 
     recipesAPI.addRecipe(r);
@@ -68,6 +70,15 @@ const NewRecipe = (props) => {
                       <Form.Control
                         type="text"
                         onChange={(i) => setIng(i.target.value)}
+                      />
+                    </Form.Group>
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    Image (url):
+                    <Form.Group className="mb-3">
+                      <Form.Control
+                        type="text"
+                        onChange={(i) => setImg(i.target.value)}
                       />
                     </Form.Group>
                   </ListGroup.Item>

@@ -13,7 +13,7 @@ const RecipesList = (props) => {
   const sortByPriority = (a,b) => {
     if (a.priority === "HIGH") {
         if (b.priority === "HIGH") {
-            return (a.recipe.title > b.recipe.title) ? 1 : ((b.recipe.title > a.recipe.title) ? -1 : 0);
+            return (a.ingredient > b.ingredient) ? 1 : ((b.ingredient > a.ingredient) ? -1 : 0);
         } else {
             return -1;
         }
@@ -21,14 +21,14 @@ const RecipesList = (props) => {
         return 1;
     } else if (a.priority === "LOW") {
         if (b.priority === "LOW") {
-            return (a.recipe.title > b.recipe.title) ? 1 : ((b.recipe.title > a.recipe.title) ? -1 : 0);
+            return (a.ingredient > b.ingredient) ? 1 : ((b.ingredient > a.ingredient) ? -1 : 0);
         } else {
             return 1;
         }
     } else if (b.priority === "LOW") {
         return -1;
     } else {
-        return (a.recipe.title > b.recipe.title) ? 1 : ((b.recipe.title > a.recipe.title) ? -1 : 0);
+        return (a.ingredient > b.ingredient) ? 1 : ((b.ingredient > a.ingredient) ? -1 : 0);
     }
 }
 

@@ -25,7 +25,7 @@ const MyRecipes = () => {
         })
         .catch((err) => console.log(err));
     }
-  }, []);
+  }, [recipes]);
 
   const deleteMyRecipe = async (id) => {
     await recipesAPI.deleteRecipe(id);
@@ -44,7 +44,7 @@ const MyRecipes = () => {
           <FontAwesomeIcon icon={faPlus} /> Recipe
         </Button>
       </Container>
-      <br />
+      <br /><br/>
       <RecipesList recipes={recipes} delete={deleteMyRecipe} />
       <NewRecipe show={modal} onHide={() => setModal(0)} />
     </>

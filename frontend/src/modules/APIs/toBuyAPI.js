@@ -1,7 +1,7 @@
 import authenticated from '../general/authenticated';
 import HOST from './host';
 
-const toBuy = {
+const toBuyAPI = {
   async deleteAllToBuy() {
     const requestOptions = {
       method: 'DELETE',

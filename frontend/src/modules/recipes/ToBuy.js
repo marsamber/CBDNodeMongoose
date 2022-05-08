@@ -36,6 +36,7 @@ const ToBuy = () => {
           <FontAwesomeIcon icon={faPlus} />
         </Button>
       </Container>
+      <br/><br/>
       <ToBuyList items={buys} delete = {deleteToBuy} />
       <NewToBuy show={modal} onHide={() => setModal(0)} />
     </>
