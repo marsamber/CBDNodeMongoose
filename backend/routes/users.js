@@ -34,7 +34,8 @@ router.route('/:id')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .delete(cors.cors, async (req, res) => {
   try {
-    await User.deleteOne({ _id: req.params.id });
+    const user = await User.findOne({ _id: req.params.id });
+    user.remove();
     res.status(204).send();
   } catch {
     res.status(404);

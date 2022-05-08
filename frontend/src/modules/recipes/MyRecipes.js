@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import usersAPI from "../APIs/usersAPI";
 import MenuProfile from "../general/MenuProfile";
 import RecipesList from "./RecipesList";
 import '../../index.css';
@@ -14,8 +15,12 @@ const MyRecipes = () => {
     const [recipes, setRecipes] = useState([]);
     useEffect(() => {
         const user = authenticated.getStorage("user");
-        setRecipes(JSON.parse(user).recipes);
-    }, [recipes])
+        if(user){
+            usersAPI.getUserByUsername(JSON.parse(user).username).then((user) => {
+            setRecipes(user.recipes);
+        }).catch((err) => console.log(err));
+        }
+    }, [])
 
     const deleteMyRecipe = async(id) => {
         await recipesAPI.deleteRecipe(id);
@@ -25,6 +30,7 @@ const MyRecipes = () => {
         <br />
         <h1 className="title text-center">My Recipes</h1>
         <Container><Button id='btnPag' style={{ float: "right" }}><FontAwesomeIcon icon={faPlus} /> Recipe</Button></Container>
+        <br/>
         <RecipesList recipes={recipes} delete = {deleteMyRecipe} /></>
 }
 

@@ -50,8 +50,8 @@ router.post("/import", async (req, res) => {
     else recipes = await Recipe.find({ $or:[{"title": { "$regex": toSearch, "$options": "i" } }, {"ingredients": { "$regex": toSearch, "$options": "i" } } ]});
     res.send(recipes);
   }).delete(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
-    await Recipe.deleteMany();
-    const recipes = await Recipe.find();
+    var recipes = await Recipe.deleteMany();
+    recipes = await Recipe.find();
     if (recipes.length === 0) { res.status(204); res.end(); }
     else { res.status(404); res.send("We couldn't delete!") }
   }).put(cors.corsWithOptions, authenticate.verifyUser, (req, res) => {

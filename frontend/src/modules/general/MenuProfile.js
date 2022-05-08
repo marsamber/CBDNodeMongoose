@@ -7,10 +7,10 @@ const MenuProfile = () => {
     return <Container>
         <br />
         <div className="d-flex justify-content-center">
-            <badge className="badge" id="badgeProfile"><a href="/myRecipes">My Recipes</a></badge>&nbsp;
-            <badge className="badge" id="badgeProfile"><a href="/favourites">Favourites</a></badge>&nbsp;
-            <badge className="badge" id="badgeProfile"><a href="/cooked">Cooked</a></badge>&nbsp;
-            <badge className="badge" id="badgeProfile"><a href="/toCook">To Cook</a></badge>
+            <span className="badge" id="badgeProfile"><a href="/myRecipes">My Recipes</a></span>&nbsp;
+            <span className="badge" id="badgeProfile"><a href="/favourites">Favourites</a></span>&nbsp;
+            <span className="badge" id="badgeProfile"><a href="/cooked">Cooked</a></span>&nbsp;
+            <span className="badge" id="badgeProfile"><a href="/toCook">To Cook</a></span>
         </div>
     </Container>
 }
