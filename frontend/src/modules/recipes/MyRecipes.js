@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import usersAPI from "../APIs/usersAPI";
 import MenuProfile from "../general/MenuProfile";
 import RecipesList from "./RecipesList";
 import "../../index.css";
@@ -8,21 +7,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import authenticated from "../general/authenticated";
 import NewRecipe from "./NewRecipe";
+import recipesAPI from "../APIs/recipesAPI";
 
 const MyRecipes = () => {
   if (!authenticated.isLogged()) window.location.href = "/";
 
   const [modal, setModal] = useState(0);
-  const [recipes, setRecipes] = useState([]);
-  useEffect(() => {
-    const username = authenticated.getStorage("username");
-    usersAPI
-      .getUserByUsername(username)
-      .then((user) => {
-        setRecipes(user.recipes);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    const [recipes, setRecipes] = useState([]);
+    useEffect(() => {
+        const user = authenticated.getStorage("user");
+        setRecipes(JSON.parse(user).recipes);
+    }, [recipes])
+
+    const deleteMyRecipe = async(id) => {
+        await recipesAPI.deleteRecipe(id);
+    }
 
   return (
     <>
@@ -38,7 +37,7 @@ const MyRecipes = () => {
           <FontAwesomeIcon icon={faPlus} /> Recipe
         </Button>
       </Container>
-      <RecipesList recipes={recipes} />
+      <RecipesList recipes={recipes}   delete = {deleteMyRecipe} />
       <NewRecipe show={modal} onHide={() => setModal(0)} />
     </>
   );

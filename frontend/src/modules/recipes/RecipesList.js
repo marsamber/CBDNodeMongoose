@@ -8,36 +8,75 @@ const RecipesList = (props) => {
     const pageStr = urlParams.get('page');
     const page = pageStr === null ? 1 : parseInt(pageStr);
 
-    if (!props.recipes) return <>Loading...</>
-
     let totalCountPage = 20;
-    var recipes = props.recipes;
-    let numPages = Math.ceil(recipes.length / totalCountPage);
+    let numPages;
 
+    if(!props.recipes && !props.items) return <>Loading...</>
+
+    let numRow;
+
+    var recipes;
+    if(props.recipes){
+        recipes = props.recipes;
+        numPages = Math.ceil(recipes.length / totalCountPage);
+
+        recipes.sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0))
+        recipes = recipes.slice(page * totalCountPage - totalCountPage, totalCountPage * page);
+
+        numRow = Math.ceil(recipes.length / 4);
+    }
+    
     var items;
-    if (props.items) {
+    if (props.items && props.val === "Like") {
         items = props.items;
-        items.sort((a, b) => (a.recipe.title > b.recipe.title) ? 1 : ((b.recipe.title > a.recipe.title) ? -1 : 0))
+        numPages = Math.ceil(items.length / totalCountPage);
+
+        items.sort((a, b) => (a.like < b.like) ? 1 : ((b.like < a.like) ? -1 : (a.recipe.title > b.recipe.title) ? 1 : ((b.recipe.title > a.recipe.title) ? -1 : 0)))
         items = items.slice(page * totalCountPage - totalCountPage, totalCountPage * page);
+
+        numRow = Math.ceil(items.length / 4);
+    } else if (props.items && props.val === "Priority"){
+        items = props.items;
+        numPages = Math.ceil(items.length / totalCountPage);
+
+        items.sort((a, b) => props.sortByPriority(a,b))
+        items = items.slice(page * totalCountPage - totalCountPage, totalCountPage * page);
+
+        numRow = Math.ceil(items.length / 4);
+    } else if (props.items && !props.val) {
+        items = props.items;
+        numPages = Math.ceil(items.length / totalCountPage);
+
+        items.sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0))
+        items = items.slice(page * totalCountPage - totalCountPage, totalCountPage * page);
+
+        numRow = Math.ceil(items.length / 4);
     }
 
-    recipes.sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0))
-    recipes = recipes.slice(page * totalCountPage - totalCountPage, totalCountPage * page);
-
-    let numRow = recipes.length / 4;
-    numRow = Math.round(numRow) + 1;
     let i = -1;
     return <Container>
-        {recipes.length === 0 ? <><br /><Alert className="text-center alertDiv" variant='warning'>
+        {props.recipes && recipes.length === 0 ? <><br /><Alert className="text-center alertDiv" variant='warning'>
+            No recipes found!
+        </Alert></> : <></>}
+        {props.items && items.length === 0 ? <><br /><Alert className="text-center alertDiv" variant='warning'>
             No recipes found!
         </Alert></> : <></>}
         {[...Array(numRow)].map((e, ind) => {
             return <Row key={ind} className="align-items-center">{[...Array(4)].map((el) => {
                 i++;
-                if (i < recipes.length && props.val && items)
-                    return <RecipeItem recipe={recipes[i]} key={recipes[i]._id} item={items[i]} val={props.val} />
-                if (i < recipes.length)
+                if (props.items && i < items.length && props.delete){
+                    return <RecipeItem recipe={items[i].recipe} key={items[i].recipe._id} item={items[i]} delete={props.delete}/>
+                }
+                if (props.items && i < items.length && props.val){
+                    if(props.delete) 
+                        return <RecipeItem recipe={items[i].recipe} key={items[i].recipe._id} item={items[i]} val={props.val} delete={props.delete}/>
+                    return <RecipeItem recipe={items[i].recipe} key={items[i].recipe._id} item={items[i]} val={props.val} />
+                }
+                if (props.recipes && i < recipes.length){
+                    if(props.delete)
+                        return <RecipeItem recipe={recipes[i]} key={recipes[i]._id} delete = {props.delete} />
                     return <RecipeItem recipe={recipes[i]} key={recipes[i]._id} />
+                }
                 return <></>
             })}</Row>
         })}
