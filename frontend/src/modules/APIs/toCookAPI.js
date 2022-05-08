@@ -24,6 +24,7 @@ const toCookAPI = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authenticated.getStorage("token")}`,
       },
+      body: JSON.stringify(c),
     };
 
     return await fetch(

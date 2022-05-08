@@ -7,6 +7,8 @@ import {
   ListGroup,
   Form,
   Button,
+  Popover,
+  OverlayTrigger,
 } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import "./recipe.css";
@@ -22,6 +24,8 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 function Recipe() {
   if (!authenticated.isLogged()) window.location.href = "/";
 
+  const userId = JSON.parse(authenticated.getStorage("user"))._id
+
   const params = useParams();
   const recipeId = params.id;
   const [recipe, setRecipe] = useState(null);
@@ -31,7 +35,7 @@ function Recipe() {
   const [toCookId, setToCookId] = useState(null);
   const [cooked, setCooked] = useState(false);
   const [cookedId, setCookedId] = useState(null);
-
+  
   useEffect(() => {
     recipesAPI.getRecipeById(recipeId).then((recipe) => setRecipe(recipe));
     favouriteAPI.getAllFavourites().then((list) => {
@@ -61,7 +65,7 @@ function Recipe() {
         }
       }
     });
-  }, [recipe]);
+  }, [recipe,recipeId]);
 
   function comment(event) {
     event.preventDefault();
@@ -73,6 +77,85 @@ function Recipe() {
     };
     recipesAPI.addComment(recipeId, c);
   }
+
+  const popoverToCook = (
+    <Popover id={"popover-positioned-top"}>
+      <Popover.Header as="h3">Choose priority</Popover.Header>
+      <Popover.Body>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            let c = {
+              priority: "LOW"
+            };
+            toCookAPI.addToCook(recipeId, c);
+          }}
+          disabled={toCook}
+        >
+          Low
+        </Button>
+
+        <Button
+          variant="primary"
+          onClick={() => {
+            let c = {
+              priority: "MEDIUM"
+            };
+            toCookAPI.addToCook(recipeId, c);
+          }}
+          disabled={toCook}
+        >
+          Medium
+        </Button>
+        <Button
+          variant="warning"
+          onClick={() => {
+            let c = {
+              priority: "HIGH"
+            };
+            toCookAPI.addToCook(recipeId, c);
+          }}
+          disabled={toCook}
+        >
+          High
+        </Button>
+
+      </Popover.Body>
+    </Popover>
+  );
+
+  const popoverCooked = (
+    <Popover id={"popover-positioned-top"}>
+      <Popover.Header as="h3">Liked it?</Popover.Header>
+      <Popover.Body>
+        <Button
+          variant="success"
+          onClick={() => {
+            let c = {
+              like: "LIKE"
+            };
+            cookedAPI.addCooked(recipeId, c);
+          }}
+          disabled={toCook}
+        >
+          Like
+        </Button>
+
+        <Button
+          variant="danger"
+          onClick={() => {
+            let c = {
+              like: "DISLIKE"
+            };
+            cookedAPI.addCooked(recipeId, c);
+          }}
+          disabled={toCook}
+        >
+          Dislike
+        </Button>
+      </Popover.Body>
+    </Popover>
+  );
 
   if (!recipe)
     return (
@@ -105,7 +188,7 @@ function Recipe() {
           <Col>
             <img
               class="bordeimagen"
-              src={"/images/" + recipe.image + ".jpg"}
+              src={recipe.image.includes(".") ? recipe.image:(`/images/${recipe.image}.jpg`)}
               alt={recipe.image}
               style={{ width: "100%" }}
             />
@@ -173,16 +256,14 @@ function Recipe() {
                   Delete from to Cook
                 </Button>
               ) : (
-                <Button
-                  variant="info"
-                  style={{ margin: "20px" }}
-                  onClick={() => {
-                    toCookAPI.addToCook(recipeId);
-                  }}
-                  disabled={toCook}
-                >
-                  Add to to Cook
-                </Button>
+                <OverlayTrigger trigger="click" placement="left" overlay={popoverToCook}>
+                  <Button
+                    variant="info"
+                    style={{ margin: "20px" }}
+                  >
+                    Add to to Cook
+                  </Button>
+                </OverlayTrigger>
               )}
 
               {cooked ? (
@@ -197,16 +278,14 @@ function Recipe() {
                   Delete from Cooked
                 </Button>
               ) : (
-                <Button
-                  variant="success"
-                  style={{ margin: "20px" }}
-                  onClick={() => {
-                    cookedAPI.addCooked(recipeId);
-                  }}
-                  disabled={cooked}
-                >
-                  Add to Cooked
-                </Button>
+                <OverlayTrigger trigger="click" placement="left" overlay={popoverCooked}>
+                  <Button
+                    variant="success"
+                    style={{ margin: "20px" }}
+                  >
+                    Add to Cooked
+                  </Button>
+                </OverlayTrigger>
               )}
             </Row>
             <Row></Row>
@@ -226,13 +305,13 @@ function Recipe() {
                         {c.user.firstname} {c.user.lastname}
                       </Col>
                       <Col md="auto">
-                        {/* {c.user._id===} */}
-                        <Button
+                        {c.user._id === userId ? <Button
                           variant="danger"
                           onClick={() => recipesAPI.deleteComment(c._id)}
                         >
                           <FontAwesomeIcon icon={faTrash} />
-                        </Button>
+                        </Button> : <></>}
+
                       </Col>
                     </Row>
                   </Alert.Heading>
