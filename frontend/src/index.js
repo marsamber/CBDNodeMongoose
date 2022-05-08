@@ -13,6 +13,7 @@ import MyRecipes from './modules/recipes/MyRecipes';
 import Favourites from './modules/recipes/Favourites';
 import Cooked from './modules/recipes/Cooked';
 import ToCook from './modules/recipes/ToCook';
+import ToBuy from './modules/recipes/ToBuy';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -29,6 +30,7 @@ root.render(
       <Route path='/favourites' element={<Favourites />} />
       <Route path='/cooked' element={<Cooked />} />
       <Route path='/toCook' element={<ToCook />} />
+      <Route path='/toBuy' element={<ToBuy />} />
       <Route path='*' element={<Navigate replace to="/" />} />
     </Routes>
   </BrowserRouter>,

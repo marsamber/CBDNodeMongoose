@@ -8,22 +8,21 @@ import {
   Modal,
   Row,
 } from "react-bootstrap";
-import recipesAPI from "../APIs/recipesAPI";
+import toBuyAPI from "../APIs/toBuyAPI";
 
-const NewRecipe = (props) => {
-  const [t, setT] = useState("");
-  const [ins, setIns] = useState("");
+const NewToBuy = (props) => {
+  const [p, setP] = useState("HIGH");
   const [ing, setIng] = useState("");
 
   function enviar() {
     props.onHide();
     const r = {
-      title: t,
-      instructions: ins,
-      ingredients: ing.split(","),
+      priority: p,
+      ingredient: ing,
     };
+    console.log(r)
 
-    recipesAPI.addRecipe(r);
+    toBuyAPI.addToBuy(r);
   }
 
   return (
@@ -45,30 +44,26 @@ const NewRecipe = (props) => {
               <Col>
                 <ListGroup>
                   <ListGroup.Item>
-                    Title:
-                    <Form.Group className="mb-3">
-                      <Form.Control
-                        type="text"
-                        onChange={(t) => setT(t.target.value)}
-                      />
-                    </Form.Group>
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    Instructions:
-                    <Form.Group className="mb-3">
-                      <Form.Control
-                        type="text"
-                        onChange={(i) => setIns(i.target.value)}
-                      />
-                    </Form.Group>
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    Ingredients (separated by ','):
+                    Ingredient:
                     <Form.Group className="mb-3">
                       <Form.Control
                         type="text"
                         onChange={(i) => setIng(i.target.value)}
                       />
+                    </Form.Group>
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    Priority:
+                    <Form.Group className="mb-3" controlId="categoria">
+                      <Form.Select
+                        onChange={(e) => {
+                          setP(e.target.value);
+                        }}
+                      >
+                        <option>HIGH</option>
+                        <option>MEDIUM</option>
+                        <option>LOW</option>
+                      </Form.Select>
                     </Form.Group>
                   </ListGroup.Item>
                 </ListGroup>
@@ -86,4 +81,4 @@ const NewRecipe = (props) => {
     </Form>
   );
 };
-export default NewRecipe;
+export default NewToBuy;
