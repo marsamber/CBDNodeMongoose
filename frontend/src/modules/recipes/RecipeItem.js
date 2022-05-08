@@ -5,6 +5,8 @@ import '../../index.css'
 
 const RecipeItem = (props) => {
   var img = props.recipe.image === "#NAME?" ? "examplee" : props.recipe.image;
+  img = img.includes(".") ? img:(`/images/${img}.jpg`);
+  
   var itemVal = null;
   var color = null;
   if (props.val === "Like") {
@@ -25,7 +27,7 @@ const RecipeItem = (props) => {
       <FontAwesomeIcon icon={faTrash} />
       </button>:<></>}
     <a id="aItem" href={'/recipe/' + props.recipe._id}><Card style={{ cursor: "pointer" }}>
-    <Card.Img variant="top" src={'/images/' + img + '.jpg'} />
+    <Card.Img variant="top" src={img} />
     <Card.Body>
       <Card.Title id="cardTitle">{props.recipe.title}</Card.Title>
       <Card.Text id="cardText">
