@@ -8,26 +8,23 @@ import cookedAPI from "../APIs/cookedAPI";
 const Cooked = () => {
     if (!authenticated.isLogged()) window.location.href = '/';
 
-    const [recipes, setRecipes] = useState([]);
     const [items, setItems] = useState([]);
 
     useEffect(() => {
         cookedAPI.getAllCooked().then((cooked) => {
             setItems(cooked);
-            var recipes = [];
-            for (let i = 0; i < cooked.length; i++) {
-                const c = cooked[i];
-                recipes.push(c.recipe)
-            }
-            setRecipes(recipes);
         }).catch((err) => console.log(err));
-    }, [])
+    }, [items])
 
-    if(!recipes) return <>Loading...</>
+    const deleteCooked = async (id) => {
+        await cookedAPI.deleteCooked(id);
+    }
+
+    if(!items) return <>Loading...</>
     return <><MenuProfile />
         <br/>
         <h1 className="title text-center">Cooked</h1>
-        <RecipesList recipes={recipes} items={items} val="Like" /></>
+        <RecipesList items={items} val="Like" delete={deleteCooked} /></>
 }
 
 export default Cooked;

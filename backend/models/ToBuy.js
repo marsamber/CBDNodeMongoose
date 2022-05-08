@@ -19,4 +19,6 @@ const toBuySchema = new Schema({
     timestamps: true
 });
 
+toBuySchema.index({ user: 1, ingredient: 1}, { unique: true });
+
 module.exports = mongoose.model("ToBuy", toBuySchema);

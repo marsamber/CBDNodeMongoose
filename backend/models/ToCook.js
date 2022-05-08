@@ -19,4 +19,6 @@ const toCookSchema = new Schema({
     timestamps: true
 });
 
+toCookSchema.index({ user: 1, recipe: 1}, { unique: true });
+
 module.exports = mongoose.model("ToCook", toCookSchema);

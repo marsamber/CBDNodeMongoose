@@ -13,6 +13,17 @@ const favouriteAPI = {
                 return res.json();
             }).catch((err) => console.log(err));
     },
+
+    async deleteFavourite(favouriteId) {
+        const requestOptions = {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authenticated.getStorage("token")}` },
+        }
+        return await fetch(`http://${HOST}:5000/api/favourite/${favouriteId}`, requestOptions)
+            .then((res) => {
+                return res;
+            }).catch((err) => console.log(err));
+    },
 }
 
 export default favouriteAPI;
