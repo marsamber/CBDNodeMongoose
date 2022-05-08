@@ -1,6 +1,6 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Badge, Button, Card, Col } from "react-bootstrap";
+import { Badge, Card, Col } from "react-bootstrap";
 import '../../index.css'
 
 const RecipeItem = (props) => {
