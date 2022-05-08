@@ -58,7 +58,7 @@ const toBuyAPI = {
     };
 
     return await fetch(
-      `http://localhost:5000/api/toBuy/${toBuyId}`,
+      `http://${HOST}:5000/api/toBuy/${toBuyId}`,
       requestOptions
     )
       .then((res) => {

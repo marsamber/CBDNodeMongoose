@@ -19,7 +19,7 @@ const usersAPI = {
             redirect: 'follow'
         };
 
-        fetch("http://localhost:5000/users/login", requestOptions)
+        fetch(`http://${HOST}:5000/users/login`, requestOptions)
             .then(async response => {
                 const res = await response.json();
                 console.log(res);
