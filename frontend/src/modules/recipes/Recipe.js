@@ -22,7 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 function Recipe() {
-  if (!authenticated.isLogged()) window.location.href = "/";
+  if (!authenticated.isLogged()) window.location.href = "/recipes";
 
   const userId = JSON.parse(authenticated.getStorage("user"))._id
 

@@ -100,24 +100,15 @@ router
     }
   })
   .put(cors.corsWithOptions, authenticate.verifyUser, async (req, res) => {
-    try {
-      const favourite = await Favourite.findOne({
-        _id: req.params.favouriteId,
-      });
-      if (req.body.like) {
-        favourite.like = req.body.like;
-      }
-      await favourite.save();
-      res.send(favourite);
-    } catch {
-      res.status(404);
-      res.send({ error: "Favourite doesn't exist!" });
-    }
+    res.status(405);
+    res.end(
+      'PUT operation not supported on /favourite/' + req.params.favouriteId
+    );
   })
   .post(cors.corsWithOptions, authenticate.verifyUser, (req, res) => {
     res.status(405);
     res.end(
-      'POST operation not supported on /favourite/' + req.params.cookedId
+      'POST operation not supported on /favourite/' + req.params.favouriteId
     );
   });
 

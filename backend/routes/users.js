@@ -17,7 +17,7 @@ router.route('/')
       res.json(users);
     }, (err) => next(err))
       .catch((err) => next(err));
-  }).delete(cors.cors, async(req, res) => {
+  }).delete(cors.cors, async (req, res) => {
     await User.deleteMany();
     const users = await User.find();
     if (users.length === 0) { res.status(204); res.end(); }
@@ -31,43 +31,34 @@ router.route('/')
   });
 
 router.route('/:id')
-.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-.delete(cors.cors, async (req, res) => {
-  try {
-    const user = await User.findOne({ _id: req.params.id });
-    user.remove();
-    res.status(204).send();
-  } catch {
-    res.status(404);
-    res.send({ error: "User doesn't exist!" });
-  }
-}).get(cors.cors, async (req, res) => {
-  try {
-    const user = await User.findOne({ _id: req.params.id })
-    .populate({
-      path: "recipes"
-    });
-    res.send(user);
-  } catch {
-    res.status(404);
-    res.send({ error: "User doesn't exist!" });
-  }
-});
+  .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+  .get(cors.cors, async (req, res) => {
+    try {
+      const user = await User.findOne({ _id: req.params.id })
+        .populate({
+          path: "recipes"
+        });
+      res.send(user);
+    } catch {
+      res.status(404);
+      res.send({ error: "User doesn't exist!" });
+    }
+  });
 
 router.route('/username/:username')
-.options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-.get(cors.cors, async (req, res) => {
-  try {
-    const user = await User.findOne({ username: req.params.username })
-    .populate({
-      path: "recipes"
-    });
-    res.send(user);
-  } catch {
-    res.status(404);
-    res.send({ error: "User doesn't exist!" });
-  }
-});
+  .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+  .get(cors.cors, async (req, res) => {
+    try {
+      const user = await User.findOne({ username: req.params.username })
+        .populate({
+          path: "recipes"
+        });
+      res.send(user);
+    } catch {
+      res.status(404);
+      res.send({ error: "User doesn't exist!" });
+    }
+  });
 
 router.route('/signup')
   .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
@@ -154,34 +145,5 @@ router.route('/edit')
     res.status(405);
     res.end("Only PUT operation supported on /users/edit");
   });
-
-//TENGO QUE MODIFICARLO PARA PODER HACER LOGOUT CON JWT (BLACKLIST)
-//NO ME FUNCIONA
-// router.route('/logout')
-//   .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-//   .get(cors.corsWithOptions, (req, res, next) => {
-//     if (req.get('Authorization')) {
-//       res.removeHeader('Authorization');
-//       res.send("Logout successful")
-//     }
-//     //   if (req.session) {
-//     //     req.session.destroy();
-//     //     res.clearCookie('session-id');
-//     //     res.redirect('/');
-//     else {
-//       var err = new Error('You are not logged in!');
-//       err.status = 403;
-//       next(err);
-//     }
-//   }).delete(cors.cors, (req, res) => {
-//     res.status(405);
-//     res.end("Only GET operation supported on /users/logout");
-//   }).post(cors.cors, (req, res) => {
-//     res.status(405);
-//     res.end("Only GET operation supported on /users/logout");
-//   }).put(cors.cors, (req, res) => {
-//     res.status(405);
-//     res.end("Only GET operation supported on /users/logout");
-//   });
 
 module.exports = router;
