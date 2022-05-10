@@ -22,7 +22,7 @@ const NewRecipe = (props) => {
       title: t,
       instructions: ins,
       ingredients: ing.split(","),
-      image: img
+      image: img === "" ? "#NAME?" : img
     };
 
     recipesAPI.addRecipe(r);
